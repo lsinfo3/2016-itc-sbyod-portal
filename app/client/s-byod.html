@@ -1,0 +1,106 @@
+<head>
+  <title>S-BYOD</title>
+</head>
+
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">S-BYOD</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          {{#if currentUser}}
+            <form class="form-inline navbar-form" role="logout">
+              <div class="form-group">
+                <li><input type="button" class="btn btn-default" id="logout" value="Logout"></li>
+              </div>
+            </form>
+          {{/if}}
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+<div class="container theme-showcase" role="main">
+
+
+      <br><br><br>
+
+      <!-- display login  -->
+      <div class="jumbotron" id="loginForm">
+        {{#if currentUser}}
+          <!-- Display this part if a user is logged in -->
+          <div class="container-fluid">
+              <header>
+                <h3> Available BYOD-Services </h3>
+              </header>
+              <form class="form-horizontal">
+                {{#each userServices}}
+                    {{> service}}
+                {{/each}}
+              </form>
+          </div>
+          <br><br>
+        {{else}}
+            {{> login}}
+        {{/if}}
+        <br>
+        <div class="container row">
+          <p class="alert alert-danger hide" id="warningDiv"></p>
+        </div>
+      </div>
+
+    <footer class="footer">
+      <p>&copy; 2016 LEHRSTUHL FÜR INFORMATIK III, AM HUBLAND, 97074 WÜRZBURG</p>
+    </footer>
+
+  </div>  <!-- Container div -->
+</body>
+
+<template name="login">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <!-- <label class="sr-only" for="exampleInputEmail3">Username</label> -->
+      <div class="col-sm-12">
+        <input type="email" class="input-lg form-control" id="user" placeholder="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="sr-only" for="exampleInputPassword3">Password</label>
+      <div class="col-sm-12">
+        <input type="password" class="input-lg form-control" id="password" placeholder="Password">
+      </div>
+    </div>
+    <button id="loginBtn" class="btn-lg btn btn-primary">Login</button>
+    <!-- <button id="registerBtn" class="btn-lg btn btn-default">Register</button> -->
+  </form>
+
+  {{#if loginError}}
+    <div class="form-group text-danger"><p>{{loginError}}</p></div>
+  {{/if}}
+</template>
+
+<template name="service">
+  <div class="form-group">
+    <div class="col-sm-12">
+      <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block">
+        <span class="glyphicon glyphicon-list"></span> {{serviceName}} &nbsp; - &nbsp;
+        {{#if serviceEnabled}}
+          Click to stop service
+        {{else}}
+          Click to start service
+        {{/if}}
+       </button>
+    </div>
+  </div>
+</template>

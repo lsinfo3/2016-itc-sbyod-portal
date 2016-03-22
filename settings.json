@@ -1,0 +1,16 @@
+{
+ "private": {
+    "admin" : {
+        "username" : "admin",
+        "password" : "password",
+        "email" : "yourEmail"
+    },
+   	"ONOSRestEndpoint" : "http://192.168.0.102:8181/onos",
+  	"ONOSByodEndpoint" : "/onos-byod",
+  	"onosCredentials" : {
+         "username" : "karaf",
+  			 "password" : "karaf"
+  			},
+  	"pollingRate" : "5000" 
+  }
+}
