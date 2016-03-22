@@ -17,6 +17,8 @@ var ONOS_credentials = ONOS_username + ":" + ONOS_password;
  Meteor.startup(function() {
    //get all Services from ONOS
    Meteor.call("updateServices");
+   //get all user Services
+   Meteor.call("updateUserServices");
    //trigger a serviceCollectionUpdate every x seconds
    Meteor.call("triggerServiceDetection");
    //create admin account
