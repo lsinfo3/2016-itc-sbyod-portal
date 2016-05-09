@@ -12,25 +12,41 @@ var ONOS_username = Meteor.settings.private.onosCredentials.username;
 var ONOS_password = Meteor.settings.private.onosCredentials.password;
 var pollingRate = Meteor.settings.private.pollingRate;
 var ONOS_credentials = ONOS_username + ":" + ONOS_password;
+var onosReachable = "-1";
 
  // Startup
- Meteor.startup(function() {
-   //get all Services from ONOS
-   Meteor.call("updateServices");
-   //get all user Services
-   Meteor.call("updateUserServices");
-   //trigger a serviceCollectionUpdate every x seconds
-   Meteor.call("triggerServiceDetection");
-   //create admin account
-   if (Meteor.users.find().count() === 0) {
+ Meteor.startup(function(){
+  //create admin account
+  if (Meteor.users.find().count() === 0) {
      var admin = Meteor.settings.private.admin.username;
      var email = Meteor.settings.private.admin.email;
      var password = Meteor.settings.private.admin.password;
      Meteor.call("createUserAccount", admin, email, password);
    }
+   Meteor.call("triggerServiceDetection");
+   //initialize meteor server (check endpoint rachability, load collections, etc.)
  });
 
 Meteor.methods({
+      serviceDetection: function(){
+        Meteor.call("checkRestEndpoint", function(error, result){
+          if(error){
+            console.log("Error while connecting to ONOS Controller. Please check Rest endpoint and/or credentials in the settings.json file.");
+            onosReachable = false;
+          } else {
+            console.log("onos reachable");
+            onosReachable = true;
+            Meteor.call("updateServices");
+            //get all user Services
+            Meteor.call("updateUserServices");
+          }
+        });
+      },
+      checkRestEndpoint: function(){
+        this.unblock();
+        var url = urlPrefix + urlBYOD + "/service";
+        return HTTP.call("GET", url, {timeout:300, auth: ONOS_credentials}).statusCode;
+      },
       /*
 
       general services part
@@ -38,7 +54,7 @@ Meteor.methods({
       */
       //get all Services available from ONOS and store them
       updateServices: function(){
-        console.log("initialize service collection");
+        //console.log("updateServices");
         //get all Services and store them in collection OnosServices
         Meteor.call("getServices", function(error, result) {
           if(error){
@@ -65,6 +81,7 @@ Meteor.methods({
       */
       //insert services a user is allowed to use into UserServices collection
       updateUserServices: function() {
+        //console.log("updateUserServices");
         //get all logged in users
         var users = UserStatus.connections.find().fetch();
         _.each(users, function(user){
@@ -97,7 +114,7 @@ Meteor.methods({
         return HTTP.call(restMethod, url, {auth: ONOS_credentials}).data;
       },
       checkServiceRevoke: function(onosServices, userId){
-        //check all service of a special user if a service got revoked
+        //check all services of a special user if a service got revoked
         _.each(UserServices.find({user: userId}).fetch(), function(userService){
           //if userService is not in ONOS services, remove this userService (service got revoked by ONOS)
           if(! Meteor.call("findServiceById", onosServices, userService.serviceId)){
@@ -130,11 +147,12 @@ Meteor.methods({
             //service already exists, so check if there was a status change
             var service_Id = existingService._id;
             var serviceStateNew = serviceToAdd.serviceEnabled;
-            console.log("YES there is a state to update: " + serviceToAdd.serviceName);
+            console.log("There is a state to update: " + serviceToAdd.serviceName);
             console.log(existingService.serviceEnabled);
             console.log(serviceToAdd.serviceEnabled)
             UserServices.update(service_Id, { $set: {serviceEnabled: serviceStateNew}});
           }
+          //Collection is "OnosServices"
         } else {
           if(! OnosServices.findOne({serviceId: serviceToAdd.serviceId})){
             OnosServices.insert({
@@ -191,7 +209,7 @@ Meteor.methods({
       //trigger service polling every "pollingRate" ms
       triggerServiceDetection: function() {
         Meteor.setInterval( function() {
-          Meteor.call("updateUserServices");
+          Meteor.call("serviceDetection")
         }, pollingRate);
       }
   });
