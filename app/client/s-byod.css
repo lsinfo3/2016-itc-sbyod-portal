@@ -1,1 +1,201 @@
-/* CSS declarations go here */
+/*
+ * Global Margins Paddings und Co.
+ ********************/
+.global-margin-20 {
+ margin-bottom:20px;
+}
+/*
+ * Header Styling
+ ****************************/
+nav {
+  background-color: #707070;
+}
+.navbar {
+  border-bottom: 1px solid black;
+  margin: 0;
+}
+UL.navbar-nav {
+  margin: 7px 0;
+}
+
+/*
+ * Colors
+ ****************************/
+ .font-white {
+   color: white;
+ }
+ .font-black{
+   color: black;
+ }
+ a .font-white{
+   color: white;
+ }
+ a .font-white, a:hover{
+   color: black;
+   text-decoration:none;
+ }
+ .btn-active{
+   background-color: #66bb6a;
+ }
+ .btn-inactive{
+   background-color: #e53935;
+ }
+ .btn-pending{
+   background-color: #ffee58;
+ }
+ .btn-active:hover{
+   background-color: #2e7d32;
+ }
+ .btn-inactive:hover{
+   background-color: #c62828;
+ }
+ .btn-pending:hover{
+   background-color: #fbc02d;
+ }
+
+.content-wrapper {
+  width: 70%;
+  margin: 20px auto;
+  padding: 25px;
+  background: #e6e6e6;
+  border-radius: 15px;
+  border: 1px solid black;
+}
+
+
+/*
+ * Partner List
+ ******************************************/
+.partnerList{
+ list-style-type: none;
+}
+ul{
+    margin-left: -40px;
+}
+ul.partnerList li {
+    list-style-type: none;
+    clear: left;
+}
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+ul.partnerList li {
+    font-size: 18px;
+}
+
+ul.partnerList img {
+    float: left;
+    width: 50%;
+    margin-right: 20px;
+    margin-bottom: 30px;
+}
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+.logo{
+  width:  50%;
+  height: auto;
+}
+
+
+
+
+
+
+
+MAIN {
+  padding-top: 50px;
+  min-height: calc(100vh - 51px);
+}
+footer {
+  position:relative;;
+  bottom:0;
+  width: 100%;
+  background-color: #707070;
+  height: 50px;
+  border-top: 1px solid black;
+  font-size: 14px;
+  font-weight: bold;
+}
+footer .list-inline {
+  margin:0;
+  color: white;
+}
+footer .footer-txt {
+  line-height: 50px;
+}
+
+.align_top{
+  margin-top: 0px;
+}
+
+.textAlignCenter{
+  text-align: center;
+}
+
+/*
+ * Spinner
+ *************************************/
+ .sk-cube-grid {
+   width: 80px;
+   height: 80px;
+   margin: 100px auto;
+ }
+
+ .sk-cube-grid .sk-cube {
+   width: 33%;
+   height: 33%;
+   background-color: #00BFFF;
+   float: left;
+   -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+           animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+ }
+ .sk-cube-grid .sk-cube1 {
+   -webkit-animation-delay: 0.2s;
+           animation-delay: 0.2s; }
+ .sk-cube-grid .sk-cube2 {
+   -webkit-animation-delay: 0.3s;
+           animation-delay: 0.3s; }
+ .sk-cube-grid .sk-cube3 {
+   -webkit-animation-delay: 0.4s;
+           animation-delay: 0.4s; }
+ .sk-cube-grid .sk-cube4 {
+   -webkit-animation-delay: 0.1s;
+           animation-delay: 0.1s; }
+ .sk-cube-grid .sk-cube5 {
+   -webkit-animation-delay: 0.2s;
+           animation-delay: 0.2s; }
+ .sk-cube-grid .sk-cube6 {
+   -webkit-animation-delay: 0.3s;
+           animation-delay: 0.3s; }
+ .sk-cube-grid .sk-cube7 {
+   -webkit-animation-delay: 0s;
+           animation-delay: 0s; }
+ .sk-cube-grid .sk-cube8 {
+   -webkit-animation-delay: 0.1s;
+           animation-delay: 0.1s; }
+ .sk-cube-grid .sk-cube9 {
+   -webkit-animation-delay: 0.2s;
+           animation-delay: 0.2s; }
+
+ @-webkit-keyframes sk-cubeGridScaleDelay {
+   0%, 70%, 100% {
+     -webkit-transform: scale3D(1, 1, 1);
+             transform: scale3D(1, 1, 1);
+   } 35% {
+     -webkit-transform: scale3D(0, 0, 1);
+             transform: scale3D(0, 0, 1);
+   }
+ }
+
+ @keyframes sk-cubeGridScaleDelay {
+   0%, 70%, 100% {
+     -webkit-transform: scale3D(1, 1, 1);
+             transform: scale3D(1, 1, 1);
+   } 35% {
+     -webkit-transform: scale3D(0, 0, 1);
+             transform: scale3D(0, 0, 1);
+   }
+ }

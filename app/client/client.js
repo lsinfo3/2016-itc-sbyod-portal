@@ -14,8 +14,27 @@ Meteor.startup(function() {
 });
 
 //subscribe Client to collections
-Meteor.subscribe("onosServices");
-Meteor.subscribe("userServices");
+//Meteor.subscribe("onosServices");
+//Meteor.subscribe("userServices");
+
+Meteor.Spinner.options = {
+    lines: 10, // The number of lines to draw
+    length: 5, // The length of each line
+    width: 4, // The line thickness
+    radius: 8, // The radius of the inner circle
+    corners: 0.7, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    direction: 1, // 1: clockwise, -1: counterclockwise
+    color: '#fff', // #rgb or #rrggbb
+    speed: 0.5, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: true, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 'auto', // Top position relative to parent in px
+    left: 'auto' // Left position relative to parent in px
+};
 
 var checkAvailable = function(){
   Meteor.call("checkRestEndpoint", function(error, result){
@@ -37,20 +56,25 @@ Template.body.events({
   }
 });
 
-Template.body.helpers({
+Template.services.helpers({
   //return onos services to display in frontend
   userServices: function() {
     return UserServices.find();
   }
 });
 
-Template.service.events({
-  "click": function() {
+Template.services.events({
+  'click': function() {
     self = this;
+    //check if Rest Endpoint is available
     Meteor.call("checkRestEndpoint", function(error, result){
       if(error){
         sAlert.error("Error code: " + error.error + ". Server not reachable. <br> Please try again later.");
       } else {
+        //Rest check successful!
+        //TODO display 2FA input
+        //TODO set button to pending state (only if serviceEnabled=true)
+        //TODO wait for 2FA accepted -> then POST message
         if(self.serviceEnabled == false){
           //enable chosen service for user
           restMethod = "POST";
@@ -62,14 +86,20 @@ Template.service.events({
         }
       }
     });
+    $('button').blur();
   }
 });
 
 // check Status of service to display correct button-style
-Template.service.helpers({
+Template.services.helpers({
   serviceBtnStyle: function() {
-    return (this.serviceEnabled) ? "btn-danger" : "btn-info";
+    return (this.serviceEnabled) ? "btn-active" : "btn-inactive";
   }
+});
+
+
+Template.spinner.helpers({
+
 });
 
 
@@ -101,3 +131,17 @@ Template.login.events({
 
   }
 });
+
+Template.userNavigation.events({
+  'click #logout': function() {
+    Meteor.logout();
+    Router.go('/');
+  }
+});
+
+Template.spinnerCube.onRendered( function(){
+  //display loading spinnerCube after 100ms (prevents flashing appearance)
+  setTimeout(function(){
+    $('#loadingHider').removeClass('hidden').addClass('show');
+  }, 100);
+})
