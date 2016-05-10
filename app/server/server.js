@@ -141,7 +141,8 @@ Meteor.methods({
               serviceName: serviceToAdd.serviceName,
               serviceId: serviceToAdd.serviceId,
               serviceTpPort: serviceToAdd.serviceTpPort,
-              serviceEnabled: serviceToAdd.serviceEnabled
+              serviceEnabled: serviceToAdd.serviceEnabled,
+              servicePending: false
             });
           } else if (existingService.serviceEnabled !== serviceToAdd.serviceEnabled) {
             //service already exists, so check if there was a status change
@@ -151,6 +152,7 @@ Meteor.methods({
             console.log(existingService.serviceEnabled);
             console.log(serviceToAdd.serviceEnabled)
             UserServices.update(service_Id, { $set: {serviceEnabled: serviceStateNew}});
+            UserServices.update(service_Id, { $set: {servicePending: false}});
           }
           //Collection is "OnosServices"
         } else {
@@ -211,5 +213,8 @@ Meteor.methods({
         Meteor.setInterval( function() {
           Meteor.call("serviceDetection")
         }, pollingRate);
+      },
+      checkVerificationToken: function(token){
+        return true;
       }
   });

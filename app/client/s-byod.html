@@ -1,5 +1,6 @@
 <head>
   <title>S-BYOD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1, user-scalable=no">
 </head>
 
 <body>
@@ -38,7 +39,9 @@
   <footer class="navbar-bottom">
     <div class="container">
       <ul class="list-inline">
-        <li class="footer-txt font-black">&copy; 2016 LEHRSTUHL FÜR INFORMATIK III, AM HUBLAND, 97074 WÜRZBURG</li>
+        <li class="bmbfLogo"> <a href="https://www.bmbf.de/"><img class="logo" id="bmbf" src="/logo-bmbf.svg" alt="Bundesministerium für Bildung und Forschung"></a> </li>
+        <li class="sardineLogo"> <a href="http://sardine-project.org/"><img class="logo" id="sardine" src="/sardine-logo.svg" alt="Sardine"></a> </li>
+        <li class="footer-txt pointer"><a href="https://www3.informatik.uni-wuerzburg.de/" class="font-black">&copy; 2016 Lehrstuhl für Informatik III, Am Hubland, 97074 Würzburg</a></li>
         <li class="footer-txt pointer "><a href="/impressum" class="font-white">Impressum</a></li>
         <li class="footer-txt pointer "><a href="/partners" class="font-white">Partner</a></li>
       </ul>
@@ -53,24 +56,19 @@
         <h3 class="align_top"> Available BYOD-Services </h3>
         <form class="form-horizontal">
           {{#each userServices}}
-            <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block">
+            <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block serviceBtn">
               <span class="glyphicon glyphicon-list"></span> {{serviceName}} &nbsp; - &nbsp;
-              {{#if serviceEnabled}}
-                <span class="glyphicon glyphicon-check"></span>
-              {{else}}
-                <span class="glyphicon glyphicon-unchecked"></span>
-              {{/if}}
+              <span class="glyphicon glyphicon-{{serviceStateGlyph}}"></span>
              </button>
           {{/each}}
         </form>
         <br>
-        <form class="form-horizontal">
+        <form class="form-inline">
           <div class="form-group">
-            <div class="col-sm-4">
-              <label for="2faToken">Verification Token</label>
-              <input type="text" class="input-lg form-control" id="2faToken" placeholder="Token">
-            </div>
+            <label class="sr-only" for="verifyToken">Verification Token</label>
+            <input type="text" class=" input-lg form-control" id="verifyToken" placeholder="Verification Token">
           </div>
+          <button id="verifyBtn" class="btn btn-lg btn-primary">Enable</button>
         </form>
       </div>
     </div>

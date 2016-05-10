@@ -35,22 +35,28 @@ UL.navbar-nav {
    text-decoration:none;
  }
  .btn-active{
-   background-color: #66bb6a;
+   /* #73e600*/
+   background-color: #27AE60;
  }
+ /* #e62e00*/
  .btn-inactive{
-   background-color: #e53935;
+   background-color: #E74C3C;
  }
+ /* #e6e600*/
  .btn-pending{
-   background-color: #ffee58;
+   background-color: #F1C40F;
  }
+ /* #80ff00*/
  .btn-active:hover{
-   background-color: #2e7d32;
+   background-color: #80ff00;
  }
+  /* #ff3300*/
  .btn-inactive:hover{
-   background-color: #c62828;
+   background-color: #ff3300;
  }
+  /* #ffff00*/
  .btn-pending:hover{
-   background-color: #fbc02d;
+   background-color: #ffff00;
  }
 
 .content-wrapper {
@@ -100,21 +106,31 @@ img {
 }
 
 
-
-
+#sardine {
+  width: 80%;
+}
+.sardineLogo{
+  max-width: 100px;
+}
+#bmbf {
+  width: 100%;
+}
+.bmbfLogo {
+  max-width: 150px;
+}
 
 
 
 MAIN {
   padding-top: 50px;
-  min-height: calc(100vh - 51px);
+  min-height: calc(100vh - 73px);
 }
 footer {
   position:relative;;
   bottom:0;
   width: 100%;
   background-color: #707070;
-  height: 50px;
+  height: auto;
   border-top: 1px solid black;
   font-size: 14px;
   font-weight: bold;

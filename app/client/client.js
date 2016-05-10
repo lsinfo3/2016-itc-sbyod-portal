@@ -13,9 +13,8 @@ Meteor.startup(function() {
   });
 });
 
-//subscribe Client to collections
-//Meteor.subscribe("onosServices");
-//Meteor.subscribe("userServices");
+//variables
+const pendingServices = new Array;
 
 Meteor.Spinner.options = {
     lines: 10, // The number of lines to draw
@@ -64,7 +63,7 @@ Template.services.helpers({
 });
 
 Template.services.events({
-  'click': function() {
+  'click .serviceBtn': function() {
     self = this;
     //check if Rest Endpoint is available
     Meteor.call("checkRestEndpoint", function(error, result){
@@ -72,28 +71,76 @@ Template.services.events({
         sAlert.error("Error code: " + error.error + ". Server not reachable. <br> Please try again later.");
       } else {
         //Rest check successful!
-        //TODO display 2FA input
-        //TODO set button to pending state (only if serviceEnabled=true)
-        //TODO wait for 2FA accepted -> then POST message
-        if(self.serviceEnabled == false){
-          //enable chosen service for user
-          restMethod = "POST";
-          Meteor.call("changeServiceStatus", self.serviceId, Meteor.userId(), restMethod);
-        } else {
+        //if service is active -> disable service
+        if(self.serviceEnabled === true){
           //disable chosen service for user
           restMethod = "DELETE";
           Meteor.call("changeServiceStatus", self.serviceId, Meteor.userId(), restMethod);
+          //set Session variable for service, holding the current state of this service
+          Session.set(self._id, "inactive");
+          sAlert.success(self.serviceName + " deactivated");
+        }
+        if(self.serviceEnabled === false){
+          UserServices.update(self._id, { $set: {servicePending: true}});
+          if(pendingServices.includes(self.serviceId) === false){
+            pendingServices.push(self.serviceId);
+          }
+          //generate a token for verification
+          tmpToken = Random.secret([16]);
+          console.log("Your Token: " + tmpToken);
+          //set Session variable for service, holding the current state of this service
+          Session.set(self._id, "pending");
         }
       }
     });
     $('button').blur();
+  },
+  'click #verifyBtn': function(event, template){
+    event.preventDefault();
+    const token = template.$('#verifyToken').val();
+    if(token){
+      Meteor.call("checkVerificationToken", token, function (error, result){
+        if(error){
+          sAlert.error("Not a valid Token");
+        } else {
+          //sAlert.success("Token verified");
+          //send pending Rest calls (services in pending state are being hold in array "pendingSerives")
+          if(pendingServices.length > 0){
+            restMethod = "POST";
+            //for each service send rest call
+            _.each(pendingServices, function(serviceId){
+              Meteor.call("changeServiceStatus", serviceId, Meteor.userId(), restMethod);
+              Session.set(serviceId, "active");
+            }, this);
+            sAlert.success(pendingServices.length + " Services activated");
+            pendingServices.length = 0;
+          }
+        }
+      });
+    } else {
+      sAlert.error("Please insert Token");
+    }
   }
 });
 
 // check Status of service to display correct button-style
 Template.services.helpers({
+  //change button style depending on service state (active, inactive or pending)
   serviceBtnStyle: function() {
-    return (this.serviceEnabled) ? "btn-active" : "btn-inactive";
+    if(Session.get(this._id) === "active" || this.serviceEnabled === true)
+      return "btn-active";
+    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+      return "btn-pending"
+    else
+      return "btn-inactive"
+  },
+  serviceStateGlyph: function(){
+    if(Session.get(this._id) === "active" || this.serviceEnabled === true)
+      return "check";
+    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+      return "log-in"
+    else
+      return "unchecked"
   }
 });
 
