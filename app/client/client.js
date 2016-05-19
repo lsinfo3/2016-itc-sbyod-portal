@@ -13,9 +13,27 @@ Meteor.startup(function() {
   });
 });
 
-//subscribe Client to collections
-Meteor.subscribe("onosServices");
-Meteor.subscribe("userServices");
+//variables
+const pendingServices = new Array;
+
+Meteor.Spinner.options = {
+    lines: 10, // The number of lines to draw
+    length: 5, // The length of each line
+    width: 4, // The line thickness
+    radius: 8, // The radius of the inner circle
+    corners: 0.7, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    direction: 1, // 1: clockwise, -1: counterclockwise
+    color: '#fff', // #rgb or #rrggbb
+    speed: 0.5, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: true, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 'auto', // Top position relative to parent in px
+    left: 'auto' // Left position relative to parent in px
+};
 
 var checkAvailable = function(){
   Meteor.call("checkRestEndpoint", function(error, result){
@@ -37,39 +55,98 @@ Template.body.events({
   }
 });
 
-Template.body.helpers({
+Template.services.helpers({
   //return onos services to display in frontend
   userServices: function() {
     return UserServices.find();
   }
 });
 
-Template.service.events({
-  "click": function() {
+Template.services.events({
+  'click .serviceBtn': function() {
     self = this;
+    //check if Rest Endpoint is available
     Meteor.call("checkRestEndpoint", function(error, result){
       if(error){
         sAlert.error("Error code: " + error.error + ". Server not reachable. <br> Please try again later.");
       } else {
-        if(self.serviceEnabled == false){
-          //enable chosen service for user
-          restMethod = "POST";
-          Meteor.call("changeServiceStatus", self.serviceId, Meteor.userId(), restMethod);
-        } else {
+        //Rest check successful!
+        //if service is active -> disable service
+        if(self.serviceEnabled === true){
           //disable chosen service for user
           restMethod = "DELETE";
           Meteor.call("changeServiceStatus", self.serviceId, Meteor.userId(), restMethod);
+          //set Session variable for service, holding the current state of this service
+          Session.set(self._id, "inactive");
+          sAlert.success(self.serviceName + " deactivated");
+        }
+        if(self.serviceEnabled === false){
+          UserServices.update(self._id, { $set: {servicePending: true}});
+          if(pendingServices.includes(self.serviceId) === false){
+            pendingServices.push(self.serviceId);
+          }
+          //generate a token for verification
+          tmpToken = Random.secret([16]);
+          console.log("Your Token: " + tmpToken);
+          //set Session variable for service, holding the current state of this service
+          Session.set(self._id, "pending");
         }
       }
     });
+    $('button').blur();
+  },
+  'click #verifyBtn': function(event, template){
+    event.preventDefault();
+    const token = template.$('#verifyToken').val();
+    if(token){
+      Meteor.call("checkVerificationToken", token, function (error, result){
+        if(error){
+          sAlert.error("Not a valid Token");
+        } else {
+          //sAlert.success("Token verified");
+          //send pending Rest calls (services in pending state are being hold in array "pendingSerives")
+          if(pendingServices.length > 0){
+            restMethod = "POST";
+            //for each service send rest call
+            _.each(pendingServices, function(serviceId){
+              Meteor.call("changeServiceStatus", serviceId, Meteor.userId(), restMethod);
+              Session.set(serviceId, "active");
+            }, this);
+            sAlert.success(pendingServices.length + " Services activated");
+            pendingServices.length = 0;
+          }
+        }
+      });
+    } else {
+      sAlert.error("Please insert Token");
+    }
   }
 });
 
 // check Status of service to display correct button-style
-Template.service.helpers({
+Template.services.helpers({
+  //change button style depending on service state (active, inactive or pending)
   serviceBtnStyle: function() {
-    return (this.serviceEnabled) ? "btn-danger" : "btn-info";
+    if(Session.get(this._id) === "active" || this.serviceEnabled === true)
+      return "btn-active";
+    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+      return "btn-pending"
+    else
+      return "btn-inactive"
+  },
+  serviceStateGlyph: function(){
+    if(Session.get(this._id) === "active" || this.serviceEnabled === true)
+      return "check";
+    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+      return "log-in"
+    else
+      return "unchecked"
   }
+});
+
+
+Template.spinner.helpers({
+
 });
 
 
@@ -101,3 +178,17 @@ Template.login.events({
 
   }
 });
+
+Template.userNavigation.events({
+  'click #logout': function() {
+    Meteor.logout();
+    Router.go('/');
+  }
+});
+
+Template.spinnerCube.onRendered( function(){
+  //display loading spinnerCube after 100ms (prevents flashing appearance)
+  setTimeout(function(){
+    $('#loadingHider').removeClass('hidden').addClass('show');
+  }, 100);
+})
