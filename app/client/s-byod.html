@@ -21,7 +21,7 @@
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav navbar-right">
           {{ > yield "userNavigation" }}
         </ul>
       </div><!-- /.navbar-collapse -->
@@ -34,16 +34,16 @@
     <div class="content-wrapper">
       {{ > yield }}
     </div>
+      {{ > yield "partners"}}
   </main>
 
   <footer class="navbar-bottom">
-    <div class="container">
-      <ul class="list-inline">
-        <li class="bmbfLogo"> <a href="https://www.bmbf.de/"><img class="logo" id="bmbf" src="/logo-bmbf.svg" alt="Bundesministerium für Bildung und Forschung"></a> </li>
+    <div class="container ">
+      <ul class="list-inline footer_align">
+        <!-- <li class="bmbfLogo"> <a href="https://www.bmbf.de/"><img class="logo" id="bmbf" src="/logo-bmbf.svg" alt="Bundesministerium für Bildung und Forschung"></a> </li> -->
         <li class="sardineLogo"> <a href="http://sardine-project.org/"><img class="logo" id="sardine" src="/sardine-logo.svg" alt="Sardine"></a> </li>
-        <li class="footer-txt pointer"><a href="https://www3.informatik.uni-wuerzburg.de/" class="font-black">&copy; 2016 Lehrstuhl für Informatik III, Am Hubland, 97074 Würzburg</a></li>
+        <li class="footer-txt pointer"><a href="https://www3.informatik.uni-wuerzburg.de/" class="font-white">&copy; 2016 Lehrstuhl für Informatik III, Am Hubland, 97074 Würzburg</a></li>
         <li class="footer-txt pointer "><a href="/impressum" class="font-white">Impressum</a></li>
-        <li class="footer-txt pointer "><a href="/partners" class="font-white">Partner</a></li>
       </ul>
     </div>
   </footer>
@@ -53,7 +53,7 @@
   <div class="container-fluid module-wrapper">
     <div class="row">
       <div class="col-lg-12">
-        <h3 class="align_top"> Available BYOD-Services </h3>
+        <h2 class="align_top"> Available BYOD-Services </h2>
         <form class="form-horizontal">
           {{#each userServices}}
             <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block serviceBtn">
@@ -78,11 +78,9 @@
 
 <template name="userNavigation">
   {{#if currentUser}}
-    <div>
       <a id="logout" class="btn btn-default">Logout &nbsp;
         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
       </a>
-    </div>
   {{/if}}
 </template>
 
@@ -111,34 +109,42 @@
 </template>
 
 <template name="partners">
-  <div class="container-fluid module-wrapper">
-    <div class="row">
-      <div class="col-lg-12">
-        <h3 class="align_top"> SarDiNe Partner </h3>
-        <ul class="partnerList">
-          <li>
-              <a href="http://genua.de"><img class="logo" src="/logo-genua.jpg" alt="Logo genua"></a>
-              genua GmbH, Kirchheim bei München <br>
-              <a href="http://genua.de">www.genua.de</a>
-          </li>
-          <li>
-              <a href="http://www3.informatik.uni-wuerzburg.de"><img class="logo" src="/logo-uniwue.png" alt="Logo genua"></a>
-              Universität Würzburg<br>
-              Lehrstuhl für Informatik III<br>
-              <a href="http://www3.informatik.uni-wuerzburg.de">www3.informatik.uni-wuerzburg.de</a>
-          </li>
-          <li>
-              <a href="http://www.lkn.ei.tum.de"><img class="logo" src="/logo-tum.png" alt="Logo genua"></a>
-              Technische Universität München<br>
-              Lehrstuhl für Kommunikationsnetze<br>
-              <a href="http://www.lkn.ei.tum.de">www.lkn.ei.tum.de</a>
-          </li>
-          <li>
-              <a href="http://www.infosim.net"><img class="logo" src="/logo-infosim.png" alt="Logo genua"></a>
-              Infosim GmbH &amp; Co. KG, Würzburg<br>
-              <a href="http://www.infosim.net">www.infosim.net</a>
-          </li>
-        </ul>
+  <div class="content-wrapper">
+    <div class="container-fluid module-wrapper">
+      <div class="row">
+        <div class="col-lg-12">
+          <ul class="partnerList">
+            <li>
+              <h2 class="align_top"> SarDiNe Sponsor </h2>
+                <a href="http://bmbf.de"><img src="/logo-bmbf.svg" alt="Logo BMBF"></a>
+                BMBF - Bundesministerium für Bildung und Forschung<br>
+                <a href="http://www.bmbf.de">bmbf.de</a>
+            </li>
+            <li>
+              <h2 class="align_top"> SarDiNe Partner </h2>
+                <a href="http://genua.de"><img class="logo" src="/logo-genua.jpg" alt="Logo genua"></a>
+                genua GmbH, Kirchheim bei München <br>
+                <a href="http://genua.de">www.genua.de</a>
+            </li>
+            <li>
+                <a href="http://www3.informatik.uni-wuerzburg.de"><img class="logo" src="/logo-uniwue.png" alt="Logo genua"></a>
+                Universität Würzburg<br>
+                Lehrstuhl für Informatik III<br>
+                <a href="http://www3.informatik.uni-wuerzburg.de">www3.informatik.uni-wuerzburg.de</a>
+            </li>
+            <li>
+                <a href="http://www.lkn.ei.tum.de"><img class="logo" src="/logo-tum.png" alt="Logo genua"></a>
+                Technische Universität München<br>
+                Lehrstuhl für Kommunikationsnetze<br>
+                <a href="http://www.lkn.ei.tum.de">www.lkn.ei.tum.de</a>
+            </li>
+            <li>
+                <a href="http://www.infosim.net"><img class="logo" src="/logo-infosim.png" alt="Logo genua"></a>
+                Infosim GmbH &amp; Co. KG, Würzburg<br>
+                <a href="http://www.infosim.net">www.infosim.net</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@
  * Header Styling
  ****************************/
 nav {
-  background-color: #707070;
+  background-color: #004188;
 }
 .navbar {
   border-bottom: 1px solid black;
@@ -129,14 +129,15 @@ footer {
   position:relative;;
   bottom:0;
   width: 100%;
-  background-color: #707070;
+  background-color: #004188;
   height: auto;
   border-top: 1px solid black;
   font-size: 14px;
   font-weight: bold;
 }
 footer .list-inline {
-  margin:0;
+  margin:0 auto;
+  text-align: center;
   color: white;
 }
 footer .footer-txt {
