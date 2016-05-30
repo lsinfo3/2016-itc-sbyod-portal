@@ -8,7 +8,7 @@
  * Header Styling
  ****************************/
 nav {
-  background-color: #707070;
+  background-color: #004188;
 }
 .navbar {
   border-bottom: 1px solid black;
@@ -16,6 +16,9 @@ nav {
 }
 UL.navbar-nav {
   margin: 7px 0;
+}
+.icon-bar{
+  background-color: white;
 }
 
 /*
@@ -58,14 +61,19 @@ UL.navbar-nav {
  .btn-pending:hover{
    background-color: #ffff00;
  }
+ .s-alert-success{
+   background-color: #5cb85c;
+ }
+ .s-alert-error{
+   background-color: #d9534f;
+ }
 
 .content-wrapper {
   width: 70%;
   margin: 20px auto;
   padding: 25px;
-  background: #e6e6e6;
+  background: white;
   border-radius: 15px;
-  border: 1px solid black;
 }
 
 
@@ -78,32 +86,49 @@ UL.navbar-nav {
 ul{
     margin-left: -40px;
 }
-ul.partnerList li {
+/*ul.partnerList li {
     list-style-type: none;
     clear: left;
-}
+}*/
 li {
     display: list-item;
     text-align: -webkit-match-parent;
 }
-ul.partnerList li {
+/*ul.partnerList li {
     font-size: 18px;
 }
 
 ul.partnerList img {
     float: left;
-    width: 50%;
+    width: 30%;
     margin-right: 20px;
     margin-bottom: 30px;
-}
+}*/
 img {
     max-width: 100%;
     vertical-align: middle;
 }
 .logo{
-  width:  50%;
+  width:  100%;
   height: auto;
 }
+ul.partnerList {
+    margin-left: 0px;
+    width: 100%;
+    display: table;
+    table-layout: fixed; /* optional, for equal spacing */
+    border-collapse: collapse;
+}
+ul.partnerList li {
+    display: table-cell;
+    text-align: center;
+    border: 10px solid white;
+    vertical-align: middle;
+}
+ul.partnerList img {
+    float: left;
+}
+
 
 
 #sardine {
@@ -129,14 +154,15 @@ footer {
   position:relative;;
   bottom:0;
   width: 100%;
-  background-color: #707070;
+  background-color: #004188;
   height: auto;
   border-top: 1px solid black;
   font-size: 14px;
   font-weight: bold;
 }
 footer .list-inline {
-  margin:0;
+  margin:0 auto;
+  text-align: center;
   color: white;
 }
 footer .footer-txt {
@@ -149,6 +175,16 @@ footer .footer-txt {
 
 .textAlignCenter{
   text-align: center;
+}
+.textAlignLeft{
+  text-align: left;
+}
+.textAlignRight{
+  text-align: right;
+}
+
+.serviceTable{
+  width: 100%;
 }
 
 /*
@@ -214,4 +250,29 @@ footer .footer-txt {
      -webkit-transform: scale3D(0, 0, 1);
              transform: scale3D(0, 0, 1);
    }
+ }
+
+
+ /**
+  * media queries from bootstrap grid
+  */
+  @media (max-width: 768px) {
+    .content-wrapper {
+      width: 100%;
+    }
+    ul.partnerList img {
+      width: 100%;
+    }
+  }
+
+ @media (min-width: 768px) and (max-width: 991px) {
+   .content-wrapper {
+     width: 100%;
+   }
+ }
+
+ @media (min-width: 992px) and (max-width: 1199px) {
+ }
+
+ @media (min-width: 1200px) {
  }

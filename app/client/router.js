@@ -48,6 +48,8 @@ Router.route('/', {
   action: function() {
     if(this.ready()){
         this.render();
+        //this.render('services', { to: 'services' });
+        this.render('partners', { to: 'partners' });
     } else {
       this.render('spinnerCube');
     }
@@ -61,7 +63,9 @@ Router.route('/login', {
   name: 'login',
   template: 'login',
   onBeforeAction: [OnBeforeActions.alreadyLoggedIn],
-  action: function() { this.render(); }
+  action: function() {
+    this.render();
+  }
 });
 
 /**
@@ -69,7 +73,4 @@ Router.route('/login', {
  */
  Router.route('/impressum', function() {
    this.render('impressum');
- });
- Router.route('/partners', function() {
-   this.render('partners');
  });

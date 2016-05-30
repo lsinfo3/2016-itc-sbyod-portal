@@ -128,19 +128,33 @@ Template.services.helpers({
   //change button style depending on service state (active, inactive or pending)
   serviceBtnStyle: function() {
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
-      return "btn-active";
+      return "btn-success";
     else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
-      return "btn-pending"
+      return "btn-warning"
     else
-      return "btn-inactive"
+      return "btn-danger"
+  },
+  serviceIcon: function(){
+    if(this.icon){
+      return "glyphicon glyphicon-" + this.icon;
+    } else {
+      return "glyphicon glyphicon-list";
+    }
   },
   serviceStateGlyph: function(){
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
       return "check";
     else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
-      return "log-in"
+      return "log-in";
     else
-      return "unchecked"
+      return "unchecked";
+  },
+  servicesAvailable: function(){
+    if(UserServices.find().count() > 0){
+      return true;
+    } else {
+        return false;
+    }
   }
 });
 
