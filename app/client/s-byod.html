@@ -55,12 +55,28 @@
       <div class="col-lg-12">
         <h2 class="align_top"> Available BYOD-Services </h2>
         <form class="form-horizontal">
-          {{#each userServices}}
-            <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block serviceBtn">
-              <span class="glyphicon glyphicon-list"></span> {{serviceName}} &nbsp; - &nbsp;
-              <span class="glyphicon glyphicon-{{serviceStateGlyph}}"></span>
-             </button>
-          {{/each}}
+          {{#if servicesAvailable}}
+            {{#each userServices}}
+              <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block serviceBtn">
+                <table class="serviceTable">
+                  <tr>
+                    <td class="textAlignLeft"><span class="{{serviceIcon}}"></span> &nbsp; {{serviceName}}</td>
+                    <td class="textAlignRight"><span class="glyphicon glyphicon-{{serviceStateGlyph}}"></span></td>
+                  </tr>
+                </table>
+                <!-- <span class="{{serviceIcon}}"></span> {{serviceName}} &nbsp; - &nbsp;
+                <span class="glyphicon glyphicon-{{serviceStateGlyph}}"></span> -->
+               </button>
+            {{/each}}
+          {{else}}
+            <button type="button" class="btn btn-default btn-lg btn-block serviceBtn" disabled="disabled">
+              <table style="width:100%">
+                <tr>
+                  <td class="textAlignLeft"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp; No services available</td>
+                </tr>
+              </table>
+            </button>
+          {{/if}}
         </form>
         <br>
         <form class="form-inline">
@@ -113,37 +129,54 @@
     <div class="container-fluid module-wrapper">
       <div class="row">
         <div class="col-lg-12">
-          <ul class="partnerList">
+
+            <ul class="partnerList">
+              <li><a href="http://bmbf.de">
+                <img class="logo" src="/logo-bmbf.svg" alt="Logo BMBF"></a></li>
+              <li><a href="http://genua.de">
+                <img class="logo" src="/logo-genua.jpg" alt="Logo genua"></a></li>
+              <li><a href="http://www3.informatik.uni-wuerzburg.de">
+                <img class="logo" src="/logo-uniwue.png" alt="Logo Uni Wue"></a></li>
+              <li><a href="http://www.lkn.ei.tum.de">
+                <img class="logo" src="/logo-tum.png" alt="Logo TUM"></a></li>
+              <li><a href="http://www.infosim.net">
+                <img class="logo logoInfosim" src="/logo-infosim.png" alt="Logo infosim"></a></li>
+            </ul>
+
+
+          <!-- <ul class="partnerList">
             <li>
               <h2 class="align_top"> SarDiNe Sponsor </h2>
                 <a href="http://bmbf.de"><img src="/logo-bmbf.svg" alt="Logo BMBF"></a>
-                BMBF - Bundesministerium für Bildung und Forschung<br>
-                <a href="http://www.bmbf.de">bmbf.de</a>
+                <span class="hidden-xs">BMBF <br> Bundesministerium für Bildung und Forschung</span><br>
+                <a class="hidden-xs" href="http://www.bmbf.de">bmbf.de</a>
             </li>
             <li>
               <h2 class="align_top"> SarDiNe Partner </h2>
                 <a href="http://genua.de"><img class="logo" src="/logo-genua.jpg" alt="Logo genua"></a>
-                genua GmbH, Kirchheim bei München <br>
-                <a href="http://genua.de">www.genua.de</a>
+                <span class="hidden-xs">genua GmbH, <br>
+                  Kirchheim bei München </span><br>
+                <a class="hidden-xs" href="http://genua.de">www.genua.de</a>
             </li>
             <li>
-                <a href="http://www3.informatik.uni-wuerzburg.de"><img class="logo" src="/logo-uniwue.png" alt="Logo genua"></a>
-                Universität Würzburg<br>
-                Lehrstuhl für Informatik III<br>
-                <a href="http://www3.informatik.uni-wuerzburg.de">www3.informatik.uni-wuerzburg.de</a>
+                <a href="http://www3.informatik.uni-wuerzburg.de"><img class="logo" src="/logo-uniwue.png" alt="Logo Uni Wue"></a>
+                <span class="hidden-xs">Universität Würzburg<br>
+                  Lehrstuhl für Informatik III</span><br>
+                <a class="hidden-xs" href="http://www3.informatik.uni-wuerzburg.de">www3.informatik.uni-wuerzburg.de</a>
             </li>
             <li>
-                <a href="http://www.lkn.ei.tum.de"><img class="logo" src="/logo-tum.png" alt="Logo genua"></a>
-                Technische Universität München<br>
-                Lehrstuhl für Kommunikationsnetze<br>
-                <a href="http://www.lkn.ei.tum.de">www.lkn.ei.tum.de</a>
+                <a href="http://www.lkn.ei.tum.de"><img class="logo" src="/logo-tum.png" alt="Logo TUM"></a>
+                <span class="hidden-xs">Technische Universität München<br>
+                  Lehrstuhl für Kommunikationsnetze</span><br>
+                <a class="hidden-xs" href="http://www.lkn.ei.tum.de">www.lkn.ei.tum.de</a>
             </li>
             <li>
-                <a href="http://www.infosim.net"><img class="logo" src="/logo-infosim.png" alt="Logo genua"></a>
-                Infosim GmbH &amp; Co. KG, Würzburg<br>
-                <a href="http://www.infosim.net">www.infosim.net</a>
+                <a href="http://www.infosim.net"><img class="logo" src="/logo-infosim.png" alt="Logo infosim"></a>
+                <span class="hidden-xs">Infosim GmbH &amp; Co. KG, <br>
+                  Würzburg</span><br>
+                <a class="hidden-xs" href="http://www.infosim.net">www.infosim.net</a>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>

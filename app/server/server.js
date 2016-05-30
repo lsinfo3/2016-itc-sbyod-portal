@@ -16,26 +16,29 @@ var onosReachable = "-1";
 
  // Startup
  Meteor.startup(function(){
-  //create admin account
+  //create admin account on initial server startup
   if (Meteor.users.find().count() === 0) {
      var admin = Meteor.settings.private.admin.username;
      var email = Meteor.settings.private.admin.email;
      var password = Meteor.settings.private.admin.password;
      Meteor.call("createUserAccount", admin, email, password);
    }
+   // start polling routine
    Meteor.call("triggerServiceDetection");
-   //initialize meteor server (check endpoint rachability, load collections, etc.)
  });
 
 Meteor.methods({
       serviceDetection: function(){
         Meteor.call("checkRestEndpoint", function(error, result){
           if(error){
-            console.log("Error while connecting to ONOS Controller. Please check Rest endpoint and/or credentials in the settings.json file.");
+            console.log("Error while connecting to ONOS Controller. Please check REST endpoint and/or credentials in the settings.json file. Also make sure ONOS is running and S-BYOD plugin is installed.");
             onosReachable = false;
+            OnosServices.remove({});
+            UserServices.remove({});
           } else {
-            console.log("onos reachable");
+            //console.log("onos reachable");
             onosReachable = true;
+            //get all available services
             Meteor.call("updateServices");
             //get all user Services
             Meteor.call("updateUserServices");
@@ -79,9 +82,8 @@ Meteor.methods({
       user-services part
 
       */
-      //insert services a user is allowed to use into UserServices collection
+      //insert services, a user is allowed to use, into UserServices collection
       updateUserServices: function() {
-        //console.log("updateUserServices");
         //get all logged in users
         var users = UserStatus.connections.find().fetch();
         _.each(users, function(user){
@@ -91,13 +93,16 @@ Meteor.methods({
             Meteor.call("checkUserServices", user.ipAddr, function(error, result) {
               if(error){
                 console.error(error);
-              } else {
-                //check if service was revoked
+                //check if result exists
+              } else if (result){
+                //check if service got revoked
                 Meteor.call("checkServiceRevoke", result.services, user.userId);
                 //store services in collection
                 _.each(result.services, function(serviceToAdd){
                     Meteor.call("insertService", "UserServices", serviceToAdd, user.userId);
                 },this);
+              } else {
+                console.error("Error while fetching users services, probably users IP unknown. IP: " + user.ipAddr);
               }
             });
           }
@@ -135,6 +140,7 @@ Meteor.methods({
       insertService: function(collection, serviceToAdd, userId){
         if(collection === "UserServices"){
           var existingService = UserServices.findOne({serviceId: serviceToAdd.serviceId});
+          //user service does not exist yet -> add to collection
           if(! UserServices.findOne({serviceId: serviceToAdd.serviceId})){
             UserServices.insert({
               user: userId,
@@ -142,20 +148,23 @@ Meteor.methods({
               serviceId: serviceToAdd.serviceId,
               serviceTpPort: serviceToAdd.serviceTpPort,
               serviceEnabled: serviceToAdd.serviceEnabled,
-              servicePending: false
+              servicePending: false,
+              icon: serviceToAdd.icon
             });
+            //user service exists but state is different (enabled/disabled) -> update state
           } else if (existingService.serviceEnabled !== serviceToAdd.serviceEnabled) {
             //service already exists, so check if there was a status change
             var service_Id = existingService._id;
             var serviceStateNew = serviceToAdd.serviceEnabled;
-            console.log("There is a state to update: " + serviceToAdd.serviceName);
-            console.log(existingService.serviceEnabled);
-            console.log(serviceToAdd.serviceEnabled)
+            //console.log("There is a state to update: " + serviceToAdd.serviceName);
+            //console.log(existingService.serviceEnabled);
+            //console.log(serviceToAdd.serviceEnabled)
             UserServices.update(service_Id, { $set: {serviceEnabled: serviceStateNew}});
             UserServices.update(service_Id, { $set: {servicePending: false}});
           }
           //Collection is "OnosServices"
         } else {
+          //add service to collection if not already existing
           if(! OnosServices.findOne({serviceId: serviceToAdd.serviceId})){
             OnosServices.insert({
               serviceName: serviceToAdd.serviceName,
@@ -214,6 +223,7 @@ Meteor.methods({
           Meteor.call("serviceDetection")
         }, pollingRate);
       },
+      //this is where 2FA happens in future
       checkVerificationToken: function(token){
         return true;
       }
