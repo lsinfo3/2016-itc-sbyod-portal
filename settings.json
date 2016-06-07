@@ -5,7 +5,7 @@
         "password" : "password",
         "email" : "yourEmail"
     },
-   	"ONOSRestEndpoint" : "http://192.168.0.102:8181/onos",
+   	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",
   	"ONOSByodEndpoint" : "/onos-byod",
   	"onosCredentials" : {
          "username" : "karaf",
