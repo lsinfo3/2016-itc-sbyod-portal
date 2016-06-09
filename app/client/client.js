@@ -136,17 +136,7 @@ Template.services.helpers({
   },
   serviceIcon: function(){
     if(this.icon){
-      //check if submitted glyphicon is a valid bootstrap glyphicon
-      Meteor.call("isValidGlyph", this.icon, function(error, result){
-        if(error) sAlert.error(error.reason);
-        else {
-          if (result === true){
-            return "glyphicon glyphicon-" + this.icon;
-          } else {
-            return "glyphicon glyphicon-list";
-          }
-        }
-      });
+      return "glyphicon glyphicon-" + this.icon;
     } else {
       return "glyphicon glyphicon-list";
     }

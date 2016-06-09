@@ -14,7 +14,6 @@ var pollingRate = Meteor.settings.private.pollingRate;
 var testusers = Meteor.settings.private.users;
 var ONOS_credentials = ONOS_username + ":" + ONOS_password;
 var onosReachable = "-1";
-var validGlyphs = ["asterisk", "plus" , "euro" , "envelope" , "glass" , "search" , "star" , "user" , "th-large" , "th-list" , "remove" , "zoom-out" , "signal" , "trash" , "file" , "road" , "download" , "inbox" , "repeat" , "list-alt" , "flag" , "volume-off" , "volume-up" , "barcode" , "tags" , "bookmark" , "camera" , "bold" , "text-height" , "align-left" , "align-right" , "list" , "indent-right" , "picture" , "adjust" , "edit" , "check" , "step-backward" , "backward" , "pause" , "forward" , "step-forward" , "chevron-left" , "plus-sign" , "remove-sign" , "question-sign" , "screenshot" , "ok-circle" , "arrow-left" , "arrow-up" , "share-alt" , "resize-small" , "gift" , "fire" , "eye-close" , "plane" , "random" , "magnet" , "chevron-down" , "shopping-cart" , "folder-open" , "resize-horizontal" , "bullhorn" , "certificate" , "thumbs-down" , "hand-left" , "hand-down" , "circle-arrow-left" , "circle-arrow-down" , "wrench" , "filter" , "fullscreen" , "paperclip" , "link" , "pushpin" , "gbp" , "sort-by-alphabet" , "sort-by-order" , "sort-by-attributes" , "unchecked" , "collapse-down" , "log-in" , "log-out" , "record" , "open" , "import" , "send" , "floppy-saved" , "floppy-save" , "credit-card" , "cutlery" , "compressed" , "phone-alt" , "stats" , "hd-video" , "sound-stereo" , "sound-5-1" , "sound-7-1" , "registration-mark" , "cloud-upload" , "tree-deciduous" , "save-file" , "level-up" , "paste" , "equalizer" , "queen" , "bishop" , "baby-formula" , "blackboard" , "apple" , "hourglass" , "duplicate" , "scissors" , "yen" , "scale" , "ice-lolly-tasted" , "option-horizontal" , "menu-hamburger" , "oil" , "sunglasses" , "text-color" , "object-align-top" , "object-align-horizontal" , "object-align-vertical" , "triangle-right" , "triangle-bottom" , "superscript" , "menu-left" , "menu-down" ];
 
  // Startup
  Meteor.startup(function(){
@@ -231,9 +230,5 @@ Meteor.methods({
       //this is where 2FA happens in future
       checkVerificationToken: function(token){
         return true;
-      },
-      isValidGlyph: function(glyph){
-        index = validGlyphs.indexOf(glyph);
-        return index === -1 ? false : true;
       }
   });
