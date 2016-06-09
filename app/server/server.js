@@ -116,7 +116,7 @@ Meteor.methods({
       checkUserServices: function(userIpAddr) {
         var userIP = userIpAddr;
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         var url = urlPrefix + urlBYOD + "/user/" + userIP;
         var restMethod = "GET";
         this.unblock();
@@ -182,7 +182,7 @@ Meteor.methods({
       changeServiceStatus: function(serviceId, serviceUserId, restMethod){
         var userIP = Meteor.call("getIpByUserId", serviceUserId);
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         Meteor.call("changeServiceStatus_Request", restMethod, userIP, serviceId, function(error, result){
           if(error){
             console.error(error);
