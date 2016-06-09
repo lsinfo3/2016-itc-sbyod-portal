@@ -23,7 +23,7 @@
         }
     },
    	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",
-  	"ONOSByodEndpoint" : "/onos-byod",
+  	"ONOSByodEndpoint" : "/sbyod",
   	"onosCredentials" : {
          "username" : "karaf",
   			 "password" : "karaf"
