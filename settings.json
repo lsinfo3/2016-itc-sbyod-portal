@@ -7,17 +7,17 @@
     },
     "users" : {
         "testuser1" : {
-          "username" : "tesuser1",
+          "username" : "testuser1",
           "password" : "password",
           "email" : "Email"
         },
         "testuser2" : {
-          "username" : "tesuser2",
+          "username" : "testuser2",
           "password" : "password",
           "email" : "Email"
         },
         "testuser3" : {
-          "username" : "tesuser3",
+          "username" : "testuser3",
           "password" : "password",
           "email" : "Email"
         }
