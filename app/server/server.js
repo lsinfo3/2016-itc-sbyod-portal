@@ -11,6 +11,7 @@ var urlBYOD = Meteor.settings.private.ONOSByodEndpoint;
 var ONOS_username = Meteor.settings.private.onosCredentials.username;
 var ONOS_password = Meteor.settings.private.onosCredentials.password;
 var pollingRate = Meteor.settings.private.pollingRate;
+var testusers = Meteor.settings.private.users;
 var ONOS_credentials = ONOS_username + ":" + ONOS_password;
 var onosReachable = "-1";
 
@@ -22,6 +23,9 @@ var onosReachable = "-1";
      var email = Meteor.settings.private.admin.email;
      var password = Meteor.settings.private.admin.password;
      Meteor.call("createUserAccount", admin, email, password);
+     _.each(testusers, function(testuser){
+       Meteor.call("createUserAccount", testuser.username, testuser.password, testuser.email);
+     }, this);
    }
    // start polling routine
    Meteor.call("triggerServiceDetection");

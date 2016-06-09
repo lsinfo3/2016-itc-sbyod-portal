@@ -5,12 +5,29 @@
         "password" : "password",
         "email" : "yourEmail"
     },
+    "users" : {
+        "testuser1" : {
+          "username" : "tesuser1",
+          "password" : "password",
+          "email" : "Email"
+        },
+        "testuser2" : {
+          "username" : "tesuser2",
+          "password" : "password",
+          "email" : "Email"
+        },
+        "testuser3" : {
+          "username" : "tesuser3",
+          "password" : "password",
+          "email" : "Email"
+        }
+    },
    	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",
   	"ONOSByodEndpoint" : "/onos-byod",
   	"onosCredentials" : {
          "username" : "karaf",
   			 "password" : "karaf"
   			},
-  	"pollingRate" : "5000" 
+  	"pollingRate" : "5000"
   }
 }
