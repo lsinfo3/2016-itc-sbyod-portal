@@ -9,17 +9,17 @@
         "testuser1" : {
           "username" : "testuser1",
           "password" : "password",
-          "email" : "Email"
+          "email" : "Email1"
         },
         "testuser2" : {
           "username" : "testuser2",
           "password" : "password",
-          "email" : "Email"
+          "email" : "Email2"
         },
         "testuser3" : {
           "username" : "testuser3",
           "password" : "password",
-          "email" : "Email"
+          "email" : "Email3"
         }
     },
    	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",

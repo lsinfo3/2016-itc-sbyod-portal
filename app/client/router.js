@@ -42,7 +42,7 @@ Router.route('/', {
   subscriptions: function(){
     return [
       Meteor.subscribe('onosServices'),
-      Meteor.subscribe('userServices')
+      Meteor.subscribe('userServices', Meteor.userId())
     ];
   },
   action: function() {

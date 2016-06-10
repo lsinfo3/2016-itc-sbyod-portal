@@ -153,14 +153,13 @@ Template.services.helpers({
     if(UserServices.find().count() > 0){
       return true;
     } else {
-        return false;
+      return false;
     }
   }
 });
 
 
 Template.spinner.helpers({
-
 });
 
 

@@ -9,7 +9,7 @@ UserServices.allow({
    // users can only modify their own user object
    if(doc.user === userId)
    {
-      UserServices.update({_id: userId}, modifier);
+      UserServices.update({_id: doc._id}, modifier);
       return true;
     } else {
       return false;

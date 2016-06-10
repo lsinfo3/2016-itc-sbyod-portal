@@ -2,8 +2,8 @@
 Meteor.publish("onosServices", function() {
   return OnosServices.find();
 });
-Meteor.publish("userServices", function() {
-  return UserServices.find();
+Meteor.publish("userServices", function(userId) {
+  return UserServices.find({user: userId});
 });
 //initialize rest endpoints, credentials and polling rate
 var urlPrefix = Meteor.settings.private.ONOSRestEndpoint;
@@ -24,7 +24,7 @@ var onosReachable = "-1";
      var password = Meteor.settings.private.admin.password;
      Meteor.call("createUserAccount", admin, email, password);
      _.each(testusers, function(testuser){
-       Meteor.call("createUserAccount", testuser.username, testuser.password, testuser.email);
+       Meteor.call("createUserAccount", testuser.username, testuser.email, testuser.password);
      }, this);
    }
    // start polling routine
@@ -143,12 +143,17 @@ Meteor.methods({
       //insert given service in collection
       insertService: function(collection, serviceToAdd, userId){
         if(collection === "UserServices"){
-          var existingService = UserServices.findOne({serviceId: serviceToAdd.serviceId});
-          //user service does not exist yet -> add to collection
-          if(! UserServices.findOne({serviceId: serviceToAdd.serviceId})){
+          var existingService = UserServices.findOne({ $and: [ {serviceId: serviceToAdd.serviceId}, {user: userId} ]});
+          //user service for particular user does not exist yet -> add to collection
+          if(! UserServices.findOne({
+                  $and: [
+                    {serviceId: serviceToAdd.serviceId},
+                    {user: userId}
+                    ]
+                  })) {
             UserServices.insert({
               user: userId,
-              serviceName: serviceToAdd.serviceName,
+              serviceName: serviceToAdd.serviceName.replace(/_|-/g, ' '),
               serviceId: serviceToAdd.serviceId,
               serviceTpPort: serviceToAdd.serviceTpPort,
               serviceEnabled: serviceToAdd.serviceEnabled,
