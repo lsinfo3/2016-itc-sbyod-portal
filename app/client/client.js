@@ -111,11 +111,11 @@ Template.services.events({
             serviceEnabled = false;
             //for each service send rest call
             _.each(pendingServices, function(serviceId){
-              Meteor.call("changeServiceStatus", serviceId, serviceEnabled, Meteor.userId(), restMethod, function(error, result){
+              Meteor.call("changeServiceStatus", serviceId, serviceEnabled, Meteor.userId(), restMethod, function(error, errorFlag){
                 if(error){
                   sAlert.error(error.reason);
                 } else {
-                  if(result === true){
+                  if(errorFlag === true){
                     Meteor.call("getServiceNameById", serviceId, function(error, result){
                       if(error) sAlert.error(error.reason);
                       else {
