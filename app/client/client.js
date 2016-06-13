@@ -75,10 +75,10 @@ Template.services.events({
         if(self.serviceEnabled === true){
           //disable chosen service for user
           restMethod = "DELETE";
-          Meteor.call("changeServiceStatus", self.serviceId, Meteor.userId(), restMethod);
+          Meteor.call("changeServiceStatus", self.serviceId, self.serviceEnabled, Meteor.userId(), restMethod);
           //set Session variable for service, holding the current state of this service
           Session.set(self._id, "inactive");
-          sAlert.success(self.serviceName + " deactivated");
+          //sAlert.success(self.serviceName + " deactivated");
         }
         if(self.serviceEnabled === false){
           UserServices.update(self._id, { $set: {servicePending: true}});
@@ -96,6 +96,7 @@ Template.services.events({
     $('button').blur();
   },
   'click #verifyBtn': function(event, template){
+    serviceCounter = 0;
     event.preventDefault();
     const token = template.$('#verifyToken').val();
     if(token){
@@ -107,12 +108,29 @@ Template.services.events({
           //send pending Rest calls (services in pending state are being hold in array "pendingSerives")
           if(pendingServices.length > 0){
             restMethod = "POST";
+            serviceEnabled = false;
             //for each service send rest call
             _.each(pendingServices, function(serviceId){
-              Meteor.call("changeServiceStatus", serviceId, Meteor.userId(), restMethod);
+              Meteor.call("changeServiceStatus", serviceId, serviceEnabled, Meteor.userId(), restMethod, function(error, result){
+                if(error){
+                  sAlert.error(error.reason);
+                } else {
+                  if(result === true){
+                    Meteor.call("getServiceNameById", serviceId, function(error, result){
+                      if(error) sAlert.error(error.reason);
+                      else {
+                        sAlert.error("Service " + result + " couldn't be activated");
+                        Session.set(serviceId, "inactive");
+                      }
+                    });
+                  }
+                }
+              });
+              collectionId = UserServices.findOne({serviceId: serviceId})._id;
+              UserServices.update(collectionId, { $set: {servicePending: false}})
               Session.set(serviceId, "active");
             }, this);
-            sAlert.success(pendingServices.length + " Services activated");
+            //sAlert.success(serviceCounter + " Services activated");
             pendingServices.length = 0;
           }
         }
@@ -129,10 +147,12 @@ Template.services.helpers({
   serviceBtnStyle: function() {
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
       return "btn-success";
-    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
-      return "btn-warning"
+    else if(this.servicePending === true && this.serviceEnabled === false && Session.get(this._id) === "pending")
+      return "btn-warning";
+    // else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+    //   return "btn-warning";
     else
-      return "btn-danger"
+      return "btn-danger";
   },
   serviceIcon: function(){
     if(this.icon){
@@ -144,7 +164,7 @@ Template.services.helpers({
   serviceStateGlyph: function(){
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
       return "check";
-    else if(Session.get(this._id) === "pending" && this.serviceEnabled === false)
+    else if(this.servicePending === true && this.serviceEnabled === false && Session.get(this._id) === "pending")
       return "log-in";
     else
       return "unchecked";
