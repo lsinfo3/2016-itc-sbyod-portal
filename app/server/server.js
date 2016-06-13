@@ -116,7 +116,7 @@ Meteor.methods({
       checkUserServices: function(userIpAddr) {
         var userIP = userIpAddr;
         //TODO delete line below
-        //userIP = "10.0.0.1";
+        userIP = "10.0.0.1";
         var url = urlPrefix + urlBYOD + "/user/" + userIP;
         var restMethod = "GET";
         this.unblock();
@@ -184,18 +184,23 @@ Meteor.methods({
         }
       },
       //changeServiceStatus (triggered when service-button is pressed)
-      changeServiceStatus: function(serviceId, serviceUserId, restMethod){
+      changeServiceStatus: function(serviceId, serviceEnabled, serviceUserId, restMethod){
+        var errorFlag = false;
         var userIP = Meteor.call("getIpByUserId", serviceUserId);
         //TODO delete line below
-        //userIP = "10.0.0.1";
+        userIP = "10.0.0.1";
         Meteor.call("changeServiceStatus_Request", restMethod, userIP, serviceId, function(error, result){
           if(error){
             console.error(error);
-          } else{
-            //update status of a users service in collection
-            Meteor.call("updateServiceStatus", serviceUserId, serviceId, result);
+          } else {
+            if(result.enabled === serviceEnabled){
+              errorFlag = true;
+            } else {
+              Meteor.call("updateServiceStatus", serviceUserId, serviceId, result);
+            }
           }
         });
+        return errorFlag;
       },
       //POST/DELETE Rest call to enabled/disable a service to a user
       changeServiceStatus_Request: function(restMethod, userIP, serviceId){
@@ -216,6 +221,11 @@ Meteor.methods({
         //update collection via service._id which is collectionSide _id
         UserServices.update(service._id, { $set: {serviceEnabled: newState}});
       },
+      checkServiceExistance: function(serviceId){
+        var url = urlPrefix + urlBYOD + "/service/" + serviceId;
+        this.unblock();
+        return HTTP.call("GET", url, {auth: ONOS_credentials}).data;
+      },
       getIpByUserId: function(userID){
         var user = UserStatus.connections.findOne({userId: userID});
         return user.ipAddr;
@@ -235,5 +245,8 @@ Meteor.methods({
       //this is where 2FA happens in future
       checkVerificationToken: function(token){
         return true;
+      },
+      getServiceNameById: function(serviceId){
+        return OnosServices.findOne({serviceId: serviceId}).serviceName;
       }
   });
