@@ -143,6 +143,10 @@ Template.services.events({
 
 // check Status of service to display correct button-style
 Template.services.helpers({
+  userServices: function(){
+    //this needs to be done to prevent duplicate services for admin user
+    return UserServices.find({user: Meteor.userId()})
+  },
   //change button style depending on service state (active, inactive or pending)
   serviceBtnStyle: function() {
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
@@ -216,8 +220,22 @@ Template.userNavigation.events({
   'click #logout': function() {
     Meteor.logout();
     Router.go('/');
+  },
+  'click #adminpanel': function() {
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Router.go('/adminpanel');
+    } else {
+      Router.go('/');
+    }
   }
 });
+
+Template.userNavigation.helpers({
+  'isAdmin': function() {
+   return Roles.userIsInRole(Meteor.userId(), 'admin');
+  }
+});
+
 
 Template.spinnerCube.onRendered( function(){
   //display loading spinnerCube after 100ms (prevents flashing appearance)

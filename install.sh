@@ -5,10 +5,6 @@ sudo apt-get update
 sudo apt-get install -y git
 sudo apt-get install -y curl
 
-#add default route
-sudo route add default gw 172.16.37.1 eth1
-sudo route del default gw 10.0.2.2
-
 #install meteor
 curl https://install.meteor.com/ | sh
 
@@ -20,6 +16,10 @@ chmod +x /home/vagrant/2016-itc-sbyod-portal/startup.sh
 
 #edit rc.local
 sudo sed -i "s|# By default this script does nothing.|(cd /home/vagrant/2016-itc-sbyod-portal/; sudo sh '/home/vagrant/2016-itc-sbyod-portal/startup.sh')|" /etc/rc.local
+
+#add default route
+sudo route add default gw 172.16.37.1 eth1
+sudo route del default gw 10.0.2.2
 
 # echo "You will now be prompted for login credentials and the IP, ONOS is running at."
 # # user name, password, email and onosIP dialog

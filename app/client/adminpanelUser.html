@@ -1,0 +1,38 @@
+<template name="adminpanelUser">
+  <div class="container-fluid module-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        {{ #if isAdmin }}
+            <h2 class="align_top"> User </h2>
+            <form class="form-horizontal">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Status</th>
+                      <th>IP-Address</th>
+                      <th>Services</th>
+                      <th>Flows</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each allUser}}
+                    <tr>
+                      <td>{{username}}</td>
+                      <td class={{fontColor}}>{{onlineStatus}}</td>
+                      <td>{{ipAddr}}</td>
+                      <td> {{#each userService}}
+                          <span class="glyphicon glyphicon-{{icon}} {{iconColor}}" aria-hidden="true" title={{serviceName}}></span>
+                           {{/each}}
+                      </td>
+                      <td><div id="showFlows" class="glyphicon glyphicon-chevron-down"></div></td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+          </form>
+        {{ /if }}
+      </div>
+    </div>
+  </div>
+</template>

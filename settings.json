@@ -22,7 +22,7 @@
           "email" : "Email3"
         }
     },
-   	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",
+   	"ONOSRestEndpoint" : "http://192.168.0.102:8181/onos",
   	"ONOSByodEndpoint" : "/sbyod",
   	"onosCredentials" : {
          "username" : "karaf",

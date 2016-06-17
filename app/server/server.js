@@ -3,7 +3,28 @@ Meteor.publish("onosServices", function() {
   return OnosServices.find();
 });
 Meteor.publish("userServices", function(userId) {
-  return UserServices.find({user: userId});
+  if (Roles.userIsInRole(this.userId, ['admin'])) {
+     return UserServices.find();
+  } else {
+    return UserServices.find({user: userId});
+  }
+});
+// publish all existing roles to client
+Meteor.publish("roles", function (){
+  if (Roles.userIsInRole(this.userId, ['admin'])) {
+     return Meteor.roles.find();
+  }
+  //return Meteor.roles.find();
+});
+// publish collection holding all users to clients
+Meteor.publish('allUsers', function(){
+  if (Roles.userIsInRole(this.userId, ['admin'])) {
+     return Meteor.users.find();
+  } else {
+  // user is not an admin -> return only the own user object
+     //TODO comment line below
+     return Meteor.users.find();
+  }
 });
 //initialize rest endpoints, credentials and polling rate
 var urlPrefix = Meteor.settings.private.ONOSRestEndpoint;
@@ -22,9 +43,12 @@ var onosReachable = "-1";
      var admin = Meteor.settings.private.admin.username;
      var email = Meteor.settings.private.admin.email;
      var password = Meteor.settings.private.admin.password;
-     Meteor.call("createUserAccount", admin, email, password);
+     adminRole = "admin";
+     Meteor.call("createUserAccount", admin, email, password, adminRole);
+     defaultRole = "default"
+     Meteor.call("createNewRole", defaultRole);
      _.each(testusers, function(testuser){
-       Meteor.call("createUserAccount", testuser.username, testuser.email, testuser.password);
+       Meteor.call("createUserAccount", testuser.username, testuser.email, testuser.password, defaultRole);
      }, this);
    }
    // start polling routine
@@ -116,7 +140,7 @@ Meteor.methods({
       checkUserServices: function(userIpAddr) {
         var userIP = userIpAddr;
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         var url = urlPrefix + urlBYOD + "/user/" + userIP;
         var restMethod = "GET";
         this.unblock();
@@ -178,7 +202,8 @@ Meteor.methods({
             OnosServices.insert({
               serviceName: serviceToAdd.serviceName,
               serviceId: serviceToAdd.serviceId,
-              serviceTpPort: serviceToAdd.serviceTpPort
+              serviceTpPort: serviceToAdd.serviceTpPort,
+              serviceIcon: serviceToAdd.icon
             });
           }
         }
@@ -188,7 +213,7 @@ Meteor.methods({
         var errorFlag = false;
         var userIP = Meteor.call("getIpByUserId", serviceUserId);
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         Meteor.call("changeServiceStatus_Request", restMethod, userIP, serviceId, function(error, result){
           if(error){
             console.error(error);
@@ -226,15 +251,21 @@ Meteor.methods({
         this.unblock();
         return HTTP.call("GET", url, {auth: ONOS_credentials}).data;
       },
-      getIpByUserId: function(userID){
-        var user = UserStatus.connections.findOne({userId: userID});
+      getIpByUserId: function(userId){
+        var user = UserStatus.connections.findOne({userId: userId});
         return user.ipAddr;
       },
-      createUserAccount: function(username, email, password){
+      createUserAccount: function(username, email, password, role){
         var newUserId = Accounts.createUser({
           username: username,
           email: email,
           password : password});
+        Roles.addUsersToRoles(newUserId, role);
+      },
+      createNewRole: function(role){
+        return Meteor.roles.insert({
+          name: role
+        });
       },
       //trigger service polling every "pollingRate" ms
       triggerServiceDetection: function() {

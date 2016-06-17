@@ -26,6 +26,14 @@ OnBeforeActions = {
     }
     else
       this.next();
+  },
+  adminRoleRequired: function() {
+    if( Roles.userIsInRole(Meteor.userId(), 'admin') === false){
+      this.redirect('/');
+      this.next();
+    } else {
+      this.next();
+    }
   }
 };
 
@@ -49,6 +57,58 @@ Router.route('/', {
     if(this.ready()){
         this.render();
         //this.render('services', { to: 'services' });
+        this.render('partners', { to: 'partners' });
+    } else {
+      this.render('spinnerCube');
+    }
+  }
+});
+
+/**
+ * routes for adminpanel
+ */
+ Router.route('/adminpanel', {
+   name: 'adminpanel',
+   template: 'adminpanel',
+   onBeforeAction: [OnBeforeActions.userRequired, OnBeforeActions.adminRoleRequired],
+   action: function() {
+     this.render();
+     this.render('partners', {to: 'partners'});
+   }
+ });
+Router.route('/adminpanel/services', {
+  name: 'adminpanel.services',
+  template: 'adminpanelServices',
+  onBeforeAction: [OnBeforeActions.userRequired, OnBeforeActions.adminRoleRequired],
+  subscriptions: function(){
+    return [
+      Meteor.subscribe('onosServices'),
+      Meteor.subscribe('userServices', Meteor.userId())
+    ];
+  },
+  action: function() {
+    if(this.ready()){
+        this.render();
+        this.render('partners', { to: 'partners' });
+    } else {
+      this.render('spinnerCube');
+    }
+  }
+});
+Router.route('/adminpanel/user', {
+  name: 'adminpanel.user',
+  template: 'adminpanelUser',
+  onBeforeAction: [OnBeforeActions.userRequired, OnBeforeActions.adminRoleRequired],
+  subscriptions: function(){
+    return [
+      Meteor.subscribe('onosServices'),
+      Meteor.subscribe('userServices', Meteor.userId()),
+      Meteor.subscribe('allUsers')
+    ];
+  },
+  action: function() {
+    if(this.ready()){
+        this.render();
         this.render('partners', { to: 'partners' });
     } else {
       this.render('spinnerCube');
