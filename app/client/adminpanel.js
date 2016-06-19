@@ -10,5 +10,8 @@ Template.adminpanel.events({
   },
   'click #user': function(){
     Router.go('/adminpanel/user');
+  },
+  'click #flows': function(){
+    Router.go('/adminpanel/flows');
   }
 })

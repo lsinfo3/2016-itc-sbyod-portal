@@ -10,8 +10,6 @@ Template.adminpanelServices.helpers({
     return OnosServices.find();
   },
   'isAdmin': function() {
-    //return Roles.userIsInRole(Meteor.userId(), 'admin');
-    //TODO delete below
-    return true;
+    return Roles.userIsInRole(Meteor.userId(), 'admin');
   }
 });

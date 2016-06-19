@@ -3,7 +3,7 @@ Meteor.publish("onosServices", function() {
   return OnosServices.find();
 });
 Meteor.publish("userServices", function(userId) {
-  if (Roles.userIsInRole(this.userId, ['admin'])) {
+  if(Roles.userIsInRole(this.userId, ['admin'])) {
      return UserServices.find();
   } else {
     return UserServices.find({user: userId});
@@ -11,19 +11,24 @@ Meteor.publish("userServices", function(userId) {
 });
 // publish all existing roles to client
 Meteor.publish("roles", function (){
-  if (Roles.userIsInRole(this.userId, ['admin'])) {
+  if(Roles.userIsInRole(this.userId, ['admin'])) {
      return Meteor.roles.find();
   }
   //return Meteor.roles.find();
 });
 // publish collection holding all users to clients
 Meteor.publish('allUsers', function(){
-  if (Roles.userIsInRole(this.userId, ['admin'])) {
+  if(Roles.userIsInRole(this.userId, ['admin'])) {
      return Meteor.users.find();
   } else {
   // user is not an admin -> return only the own user object
-     //TODO comment line below
-     return Meteor.users.find();
+     return Meteor.users.find({_id: this.userId});
+  }
+});
+//publish FlowCollection to user admin
+Meteor.publish("flows", function() {
+  if(Roles.userIsInRole(this.userId, ['admin'])){
+    return FlowCollection.find();
   }
 });
 //initialize rest endpoints, credentials and polling rate
@@ -35,6 +40,9 @@ var pollingRate = Meteor.settings.private.pollingRate;
 var testusers = Meteor.settings.private.users;
 var ONOS_credentials = ONOS_username + ":" + ONOS_password;
 var onosReachable = "-1";
+//every flowResetCounter * pollingRate the flow collection is deleted
+//this deletes old unused flows
+var flowResetCounter = 5;
 
  // Startup
  Meteor.startup(function(){
@@ -63,6 +71,7 @@ Meteor.methods({
             onosReachable = false;
             OnosServices.remove({});
             UserServices.remove({});
+            FlowCollection.remove({});
           } else {
             //console.log("onos reachable");
             onosReachable = true;
@@ -70,6 +79,8 @@ Meteor.methods({
             Meteor.call("updateServices");
             //get all user Services
             Meteor.call("updateUserServices");
+            //get all flows
+            Meteor.call("updateFlows");
           }
         });
       },
@@ -85,8 +96,11 @@ Meteor.methods({
       */
       //get all Services available from ONOS and store them
       updateServices: function(){
-        //console.log("updateServices");
         //get all Services and store them in collection OnosServices
+        if(flowResetCounter === 0){
+          FlowCollection.remove({});
+          flowResetCounter = 4;
+        }
         Meteor.call("getServices", function(error, result) {
           if(error){
             console.error(error);
@@ -96,6 +110,7 @@ Meteor.methods({
             }, this);
           }
         });
+        flowResetCounter -= 1;
       },
       //get all BYOD Services from ONOS
       getServices: function(){
@@ -103,8 +118,47 @@ Meteor.methods({
          var url = urlPrefix + urlBYOD + "/service"
          return HTTP.call("GET", url, {auth: ONOS_credentials}).data;
       },
+      /*
 
+      flow part
 
+      */
+      updateFlows: function(){
+        //get the flows from endpoint "v1/flows" and store them in FlowCollection
+        Meteor.call("getFlows", function(error, result) {
+          if(error) console.error(error)
+          else{
+            _.each(result.flows, function(flowToAdd){
+              Meteor.call("insertFlow", flowToAdd);
+            },this);
+          }
+        });
+      },
+      //get the flows over REST
+      getFlows: function(){
+        this.unblock();
+        var url = urlPrefix + "/v1" + "/flows";
+        return HTTP.call("GET", url, {auth: ONOS_credentials}).data;
+      },
+      //store a flow
+      insertFlow: function(flowToAdd){
+        if(! FlowCollection.findOne({_id: flowToAdd.id}) ){
+          FlowCollection.insert({
+            _id: flowToAdd.id,
+            tableId: flowToAdd.tableId,
+            appId: flowToAdd.appId,
+            priority: flowToAdd.priority,
+            deviceId: flowToAdd.deviceId,
+            state: flowToAdd.state,
+            actions: flowToAdd.treatment.instructions,
+            selectors: flowToAdd.selector.criteria
+          });
+          //state of a flow has changed
+        } else if(FlowCollection.findOne({_id: flowToAdd.id}).state !== flowToAdd.state){
+          FlowCollection.remove({_id: flowToAdd.id});
+          Meteor.call("insertFlow", flowToAdd);
+        }
+      },
       /*
 
       user-services part
@@ -140,7 +194,7 @@ Meteor.methods({
       checkUserServices: function(userIpAddr) {
         var userIP = userIpAddr;
         //TODO delete line below
-        //userIP = "10.0.0.1";
+        userIP = "10.0.0.1";
         var url = urlPrefix + urlBYOD + "/user/" + userIP;
         var restMethod = "GET";
         this.unblock();
@@ -213,7 +267,7 @@ Meteor.methods({
         var errorFlag = false;
         var userIP = Meteor.call("getIpByUserId", serviceUserId);
         //TODO delete line below
-        //userIP = "10.0.0.1";
+        userIP = "10.0.0.1";
         Meteor.call("changeServiceStatus_Request", restMethod, userIP, serviceId, function(error, result){
           if(error){
             console.error(error);

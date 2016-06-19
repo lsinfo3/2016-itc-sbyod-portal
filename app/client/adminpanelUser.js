@@ -3,7 +3,7 @@ Template.adminpanelUser.helpers({
     return Roles.userIsInRole(Meteor.userId(), 'admin');
   },
   'allUser': function(){
-    return Meteor.users.find();
+    return Meteor.users.find({},{sort: {status : -1}});
   },
   'ipAddr': function(){
     if(this.status.online === true){
@@ -18,13 +18,31 @@ Template.adminpanelUser.helpers({
   'fontColor': function(){
     return this.status.online ? "fontColorGreen" : "fontColorRed";
   },
-  'userService': function(){
+  'activeUserService': function(){
     if(this.status.online === true){
-      return UserServices.find({user: this._id});
+      return UserServices.find({$and : [
+        {user: this._id},
+        {serviceEnabled: true}
+      ]});
+    }
+  },
+  'inactiveUserService': function(){
+    if(this.status.online === true){
+      return UserServices.find({$and : [
+        {user: this._id},
+        {serviceEnabled: false}
+      ]});
     }
   },
   'iconColor': function(){
     return this.serviceEnabled ? "fontColorGreen" : "fontColorRed";
+  },
+  'userAgent': function(){
+    if(this.status.online === true){
+      return this.status.lastLogin.userAgent;
+    } else {
+      return "n/a";
+    }
   }
 });
 

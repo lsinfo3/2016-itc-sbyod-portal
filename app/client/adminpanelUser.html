@@ -5,14 +5,14 @@
         {{ #if isAdmin }}
             <h2 class="align_top"> User </h2>
             <form class="form-horizontal">
-                <table class="table table-striped">
+                <table class="table table-striped" >
                   <thead>
                     <tr>
                       <th>Username</th>
                       <th>Status</th>
                       <th>IP-Address</th>
-                      <th>Services</th>
-                      <th>Flows</th>
+                      <th>Active services</th>
+                      <th>Inactive services</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -21,11 +21,15 @@
                       <td>{{username}}</td>
                       <td class={{fontColor}}>{{onlineStatus}}</td>
                       <td>{{ipAddr}}</td>
-                      <td> {{#each userService}}
+                      <td> {{#each activeUserService}}
                           <span class="glyphicon glyphicon-{{icon}} {{iconColor}}" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}
                       </td>
-                      <td><div id="showFlows" class="glyphicon glyphicon-chevron-down"></div></td>
+                      <td> {{#each inactiveUserService}}
+                          <span class="glyphicon glyphicon-{{icon}} {{iconColor}}" aria-hidden="true" title={{serviceName}}></span>
+                           {{/each}}</td>
+                      <!-- <td>{{userAgent}}</td> -->
+                      <!-- <td><div id="showFlows" class="glyphicon glyphicon-chevron-down"></div></td> -->
                     </tr>
                     {{/each}}
                   </tbody>

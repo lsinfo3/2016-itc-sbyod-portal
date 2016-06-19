@@ -115,6 +115,27 @@ Router.route('/adminpanel/user', {
     }
   }
 });
+Router.route('/adminpanel/flows', {
+  name: 'adminpanel.flows',
+  template: 'adminpanelFlows',
+  onBeforeAction: [OnBeforeActions.userRequired, OnBeforeActions.adminRoleRequired],
+  subscriptions: function(){
+    return [
+      Meteor.subscribe('onosServices'),
+      Meteor.subscribe('userServices', Meteor.userId()),
+      Meteor.subscribe('flows'),
+      Meteor.subscribe('allUsers')
+    ];
+  },
+  action: function() {
+    if(this.ready()){
+        this.render();
+        this.render('partners', { to: 'partners' });
+    } else {
+      this.render('spinnerCube');
+    }
+  }
+});
 
 /**
  * routes for login handling
