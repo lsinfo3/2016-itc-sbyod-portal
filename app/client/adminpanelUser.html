@@ -12,7 +12,7 @@
                       <th>Status</th>
                       <th>Last IP-Address</th>
                       <th>Last active</th>
-                      <th>Active services</th>
+                      <th>Last active services</th>
                       <th>Inactive services</th>
                     </tr>
                   </thead>
@@ -30,8 +30,6 @@
                       <td> {{#each inactiveUserService}}
                           <span class="glyphicon glyphicon-{{icon}} fontColorRed iconSize" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}</td>
-                      <!-- <td>{{userAgent}}</td> -->
-                      <!-- <td><div id="showFlows" class="glyphicon glyphicon-chevron-down"></div></td> -->
                     </tr>
                     {{/each}}
                   </tbody>

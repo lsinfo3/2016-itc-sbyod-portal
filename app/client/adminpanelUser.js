@@ -6,7 +6,12 @@ Template.adminpanelUser.helpers({
     return Meteor.users.find({},{sort: {status : -1}});
   },
   'ipAddr': function(){
-      return this.status.lastLogin.ipAddr;
+    var userIp = this.status.lastLogin.ipAddr
+    if(userIp){
+      return userIp;
+    } else {
+      return "n/a";
+    }
   },
   'onlineStatus': function(){
     return this.status.online ? "active" : "inactive";
@@ -31,20 +36,13 @@ Template.adminpanelUser.helpers({
   },
   'lastActive': function(){
     var ISODate = this.status.lastLogin.date;
-    return ISODate.toUTCString().slice(0, -7);
+    if(ISODate){
+      return ISODate.toUTCString().slice(0, -7);
+    } else {
+      return "never";
+    }
   },
   'userAgent': function(){
-    if(this.status.online === true){
       return this.status.lastLogin.userAgent;
-    } else {
-      return "n/a";
-    }
   }
-});
-
-Template.adminpanelUser.events({
-  'click #showFlows': function(){
-    //TODO collect flows for particular user (REST) and display them
-    console.log("Display Flows");
-  },
 });
