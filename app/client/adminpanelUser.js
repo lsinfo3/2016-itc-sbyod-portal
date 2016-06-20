@@ -6,36 +6,32 @@ Template.adminpanelUser.helpers({
     return Meteor.users.find({},{sort: {status : -1}});
   },
   'ipAddr': function(){
-    if(this.status.online === true){
       return this.status.lastLogin.ipAddr;
-    } else {
-      return "n/a";
-    }
   },
   'onlineStatus': function(){
-    return this.status.online ? "online" : "offline";
+    return this.status.online ? "active" : "inactive";
   },
   'fontColor': function(){
     return this.status.online ? "fontColorGreen" : "fontColorRed";
   },
   'activeUserService': function(){
-    if(this.status.online === true){
-      return UserServices.find({$and : [
-        {user: this._id},
-        {serviceEnabled: true}
-      ]});
-    }
+    return UserServices.find({$and : [
+      {user: this._id},
+      {serviceEnabled: true}
+    ]});
   },
   'inactiveUserService': function(){
-    if(this.status.online === true){
-      return UserServices.find({$and : [
-        {user: this._id},
-        {serviceEnabled: false}
-      ]});
-    }
+    return UserServices.find({$and : [
+      {user: this._id},
+      {serviceEnabled: false}
+    ]});
   },
   'iconColor': function(){
     return this.serviceEnabled ? "fontColorGreen" : "fontColorRed";
+  },
+  'lastActive': function(){
+    var ISODate = this.status.lastLogin.date;
+    return ISODate.toUTCString().slice(0, -7);
   },
   'userAgent': function(){
     if(this.status.online === true){

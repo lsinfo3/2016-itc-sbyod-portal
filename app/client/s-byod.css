@@ -194,6 +194,10 @@ footer .footer-txt {
   width: 100%;
 }
 
+.iconSize{
+  font-size: 18px;
+}
+
 /*
  * Spinner
  *************************************/

@@ -10,7 +10,8 @@
                     <tr>
                       <th>Username</th>
                       <th>Status</th>
-                      <th>IP-Address</th>
+                      <th>Last IP-Address</th>
+                      <th>Last active</th>
                       <th>Active services</th>
                       <th>Inactive services</th>
                     </tr>
@@ -21,12 +22,13 @@
                       <td>{{username}}</td>
                       <td class={{fontColor}}>{{onlineStatus}}</td>
                       <td>{{ipAddr}}</td>
+                      <td>{{lastActive}}</td>
                       <td> {{#each activeUserService}}
-                          <span class="glyphicon glyphicon-{{icon}} {{iconColor}}" aria-hidden="true" title={{serviceName}}></span>
+                          <span class="glyphicon glyphicon-{{icon}} fontColorGreen iconSize" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}
                       </td>
                       <td> {{#each inactiveUserService}}
-                          <span class="glyphicon glyphicon-{{icon}} {{iconColor}}" aria-hidden="true" title={{serviceName}}></span>
+                          <span class="glyphicon glyphicon-{{icon}} fontColorRed iconSize" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}</td>
                       <!-- <td>{{userAgent}}</td> -->
                       <!-- <td><div id="showFlows" class="glyphicon glyphicon-chevron-down"></div></td> -->
