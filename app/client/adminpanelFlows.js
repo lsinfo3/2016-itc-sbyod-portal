@@ -6,7 +6,10 @@ Template.adminpanelFlows.helpers({
     return Roles.userIsInRole(Meteor.userId(), 'admin');
   },
   'action': function() {
-    return this.actions[0].type + " : " + this.actions[0].port;
+    var firstActionType = this.actions[0].type;
+    var firstActionPort = this.actions[0].port;
+    firstActionPort = (firstActionPort === "CONTROLLER") ? "CON" : firstActionPort;
+    return firstActionType + " : " + firstActionPort;
   },
   'appIdShortened': function(){
     return this.appId.split(".")[2];

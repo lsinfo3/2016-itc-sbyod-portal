@@ -40,9 +40,6 @@ var pollingRate = Meteor.settings.private.pollingRate;
 var testusers = Meteor.settings.private.users;
 var ONOS_credentials = ONOS_username + ":" + ONOS_password;
 var onosReachable = "-1";
-//every flowResetCounter * pollingRate the flow collection is deleted
-//this deletes old unused flows
-var flowResetCounter = 5;
 
  // Startup
  Meteor.startup(function(){
@@ -97,20 +94,16 @@ Meteor.methods({
       //get all Services available from ONOS and store them
       updateServices: function(){
         //get all Services and store them in collection OnosServices
-        if(flowResetCounter === 0){
-          FlowCollection.remove({});
-          flowResetCounter = 4;
-        }
         Meteor.call("getServices", function(error, result) {
           if(error){
             console.error(error);
           } else {
+            OnosServices.remove({});
             _.each(result.services, function(serviceToAdd){
               Meteor.call("insertService", "OnosServices", serviceToAdd);
             }, this);
           }
         });
-        flowResetCounter -= 1;
       },
       //get all BYOD Services from ONOS
       getServices: function(){
@@ -128,6 +121,13 @@ Meteor.methods({
         Meteor.call("getFlows", function(error, result) {
           if(error) console.error(error)
           else{
+            //temporary store flows
+            Meteor.call("insertTempFlows", result);
+            //delete removed flows
+            _.each(FlowCollection.find().fetch(), function(oldFlow){
+               Meteor.call("removeOldFlows", oldFlow);
+            }, this);
+            //insert new flows
             _.each(result.flows, function(flowToAdd){
               Meteor.call("insertFlow", flowToAdd);
             },this);
@@ -157,6 +157,26 @@ Meteor.methods({
         } else if(FlowCollection.findOne({_id: flowToAdd.id}).state !== flowToAdd.state){
           FlowCollection.remove({_id: flowToAdd.id});
           Meteor.call("insertFlow", flowToAdd);
+        }
+      },
+      insertTempFlows: function(newTempFlows){
+        TempFlows.remove({});
+        _.each(newTempFlows.flows, function(flowToAdd){
+          TempFlows.insert({
+            _id: flowToAdd.id,
+            tableId: flowToAdd.tableId,
+            appId: flowToAdd.appId,
+            priority: flowToAdd.priority,
+            deviceId: flowToAdd.deviceId,
+            state: flowToAdd.state,
+            actions: flowToAdd.treatment.instructions,
+            selectors: flowToAdd.selector.criteria
+          });
+        },this);
+      },
+      removeOldFlows: function(oldFlow){
+        if(! TempFlows.findOne({_id: oldFlow._id})){
+          FlowCollection.remove({_id: oldFlow._id});
         }
       },
       /*
@@ -194,7 +214,7 @@ Meteor.methods({
       checkUserServices: function(userIpAddr) {
         var userIP = userIpAddr;
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         var url = urlPrefix + urlBYOD + "/user/" + userIP;
         var restMethod = "GET";
         this.unblock();
@@ -267,7 +287,7 @@ Meteor.methods({
         var errorFlag = false;
         var userIP = Meteor.call("getIpByUserId", serviceUserId);
         //TODO delete line below
-        userIP = "10.0.0.1";
+        //userIP = "10.0.0.1";
         Meteor.call("changeServiceStatus_Request", restMethod, userIP, serviceId, function(error, result){
           if(error){
             console.error(error);
