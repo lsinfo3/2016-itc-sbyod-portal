@@ -198,6 +198,10 @@ footer .footer-txt {
   font-size: 18px;
 }
 
+.hiddenRow {
+    padding: 0 !important;
+}
+
 /*
  * Spinner
  *************************************/

@@ -5,7 +5,7 @@
         {{ #if isAdmin }}
             <h2 class="align_top"> Flows </h2>
             <form class="form-horizontal">
-                <table class="table table-striped">
+                <table class="table table-striped table-condensed">
                   <thead>
                     <tr>
                       <th>App</th>
@@ -21,7 +21,7 @@
                     {{#each flowCollection}}
                     <tr>
                       <td title={{appId}}>{{appIdShortened}}</td>
-                      <td title={{deviceId}}>...{{deviceIdShortened}}</td>
+                      <td title={{deviceId}}>{{appIdShortened}}</td>
                       <td>{{state}}</td>
                       <td>{{tableId}}</td>
                       <td>{{priority}}</td>

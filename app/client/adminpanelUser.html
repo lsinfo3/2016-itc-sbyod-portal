@@ -14,6 +14,7 @@
                       <th>Last active</th>
                       <th>Last active services</th>
                       <th>Inactive services</th>
+                      <th><span class="glyphicon glyphicon-info-sign" id="detailButton" aria-hidden="true" title="Display flows of user"></span> </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -30,6 +31,40 @@
                       <td> {{#each inactiveUserService}}
                           <span class="glyphicon glyphicon-{{icon}} fontColorRed iconSize" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}</td>
+                      <td><div  data-toggle="collapse" data-target=#{{_id}} aria-expanded="false" class="glyphicon glyphicon-chevron-down" aria-hidden="true" ></div> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="7" class="hiddenRow">
+                        <div id={{_id}} class="collapse">
+                          <table class="table table-hover table-condensed" >
+                            <thead>
+                              <tr>
+                                <th>Device</th>
+                                <th>Status</th>
+                                <th>TableId</th>
+                                <th>Priority</th>
+                                <th>Selectors</th>
+                                <th class="textAlignRight">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {{#each userFlow}}
+                              <tr>
+                                <td title={{appId}}>...{{appIdShortened}}</td>
+                                <td>{{state}}</td>
+                                <td>{{tableId}}</td>
+                                <td>{{priority}}</td>
+                                <td>{{#each selectors}}
+                                      <tr> {{selector}} </tr>
+                                    {{/each}}
+                                </td>
+                                <td class="textAlignRight">{{action}}</td>
+                              </tr>
+                              {{/each}}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
                     </tr>
                     {{/each}}
                   </tbody>

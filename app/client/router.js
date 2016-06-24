@@ -103,6 +103,7 @@ Router.route('/adminpanel/user', {
     return [
       Meteor.subscribe('onosServices'),
       Meteor.subscribe('userServices', Meteor.userId()),
+      Meteor.subscribe('flows'),
       Meteor.subscribe('allUsers')
     ];
   },
