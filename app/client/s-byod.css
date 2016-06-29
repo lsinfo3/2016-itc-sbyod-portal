@@ -34,8 +34,8 @@ UL.navbar-nav {
    color: white;
  }
  a .font-white, a:hover{
-   color: black;
-   text-decoration:none;
+   color: white;
+   text-decoration: none;
  }
  .btn-active{
    /* #73e600*/
@@ -202,7 +202,8 @@ footer .footer-txt {
 }
 
 .iconSize{
-  font-size: 18px;
+  /*font-size: 18px;*/
+  width: 18px;
 }
 .hiddenRow {
     padding: 0 !important;
