@@ -32,7 +32,7 @@
           "email" : "Email5"
         }
     },
-   	"ONOSRestEndpoint" : "http://172.17.37.11:8181/onos",
+   	"ONOSRestEndpoint" : "http://172.16.37.11:8181/onos",
   	"ONOSByodEndpoint" : "/sbyod",
   	"onosCredentials" : {
          "username" : "karaf",
