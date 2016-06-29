@@ -20,6 +20,8 @@ sudo sed -i "s|# By default this script does nothing.|(cd /home/vagrant/2016-itc
 #add default route
 sudo route add default gw 172.16.37.1 eth1
 sudo route del default gw 10.0.2.2
+echo "sudo route add default gw 172.16.37.1 eth1" >> /home/vagrant/.profile
+echo "sudo route del default gw 10.0.2.2" >> /home/vagrant/.profile
 
 # echo "You will now be prompted for login credentials and the IP, ONOS is running at."
 # # user name, password, email and onosIP dialog
