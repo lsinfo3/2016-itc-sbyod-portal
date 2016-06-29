@@ -8,9 +8,10 @@
             {{#if servicesAvailable}}
               {{#each onosServices}}
                 <button type="button" class="btn btn-primary btn-lg btn-block serviceBtn" disabled="disabled">
-                  <table class="serviceTable">
+                  <table class=" table serviceTable">
                     <tr>
-                      <td class="textAlignLeft"><span class="{{serviceIcon}}"></span> &nbsp; {{serviceName}}</td>
+                      <td class="textAlignLeft"><span class="{{serviceIcon}}"></span></td>
+                      <td class="textAlignLeft">&nbsp; {{serviceName}}</td>
                       <td class="textAlignRight"><span class=""></span>&nbsp;Port: {{serviceTpPort}}</td>
                     </tr>
                   </table>

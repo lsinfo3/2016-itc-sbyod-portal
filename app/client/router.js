@@ -147,6 +147,7 @@ Router.route('/login', {
   onBeforeAction: [OnBeforeActions.alreadyLoggedIn],
   action: function() {
     this.render();
+    this.render('partners', { to: 'partners' });
   }
 });
 

@@ -150,6 +150,9 @@ ul.partnerList img {
 .bmbfLogo {
   max-width: 150px;
 }
+.alignLogo{
+  margin-top: 10px;
+}
 
 
 
@@ -190,6 +193,10 @@ footer .footer-txt {
   text-align: right;
 }
 
+.serviceBtn{
+  white-space: normal;
+}
+
 .serviceTable{
   width: 100%;
 }
@@ -197,11 +204,9 @@ footer .footer-txt {
 .iconSize{
   font-size: 18px;
 }
-
 .hiddenRow {
     padding: 0 !important;
 }
-
 /*
  * Spinner
  *************************************/
