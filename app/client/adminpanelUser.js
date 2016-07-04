@@ -67,10 +67,8 @@ Template.adminpanelUser.helpers({
     }
   },
   'deviceIdShortened': function(){
-    deviceName = Template.adminpanelUser.__helpers.get('deviceTranslator')(this.deviceId);
+    var deviceName = Template.adminpanelUser.__helpers.get('deviceTranslator')(this.deviceId);
     return deviceName;
-    // var strLength = this.deviceId.length;
-    // return this.deviceId.substr(strLength-4,4);
   },
   'action': function() {
     var firstActionType = this.actions[0].type;
