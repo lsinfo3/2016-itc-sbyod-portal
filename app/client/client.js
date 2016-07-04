@@ -218,6 +218,9 @@ Template.login.events({
             sAlert.error(error.reason);
           }
         } else {
+          Meteor.logoutOtherClients(function(error){
+            if(error) sAlert.error(error.reason);
+          });
           checkAvailable();
         }
     });

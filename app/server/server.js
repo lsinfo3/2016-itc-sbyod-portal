@@ -151,27 +151,36 @@ Meteor.methods({
             deviceId: flowToAdd.deviceId,
             state: flowToAdd.state,
             actions: flowToAdd.treatment.instructions,
-            selectors: flowToAdd.selector.criteria
+            selectors: flowToAdd.selector.criteria,
+            newFlow: true
           });
           //state of a flow has changed
         } else if(FlowCollection.findOne({_id: flowToAdd.id}).state !== flowToAdd.state){
           FlowCollection.remove({_id: flowToAdd.id});
           Meteor.call("insertFlow", flowToAdd);
+          //remove "newFlow" flag from flow entry
+        } else {
+          FlowCollection.update({_id: flowToAdd.id},{$set: {newFlow: false}});
         }
       },
       insertTempFlows: function(newTempFlows){
         TempFlows.remove({});
         _.each(newTempFlows.flows, function(flowToAdd){
-          TempFlows.insert({
-            _id: flowToAdd.id,
-            tableId: flowToAdd.tableId,
-            appId: flowToAdd.appId,
-            priority: flowToAdd.priority,
-            deviceId: flowToAdd.deviceId,
-            state: flowToAdd.state,
-            actions: flowToAdd.treatment.instructions,
-            selectors: flowToAdd.selector.criteria
-          });
+          //since ONOS flows contain duplicate IDs next line takes care of that
+          if(! TempFlows.findOne({_id: flowToAdd.id})){
+            TempFlows.insert({
+              _id: flowToAdd.id,
+              tableId: flowToAdd.tableId,
+              appId: flowToAdd.appId,
+              priority: flowToAdd.priority,
+              deviceId: flowToAdd.deviceId,
+              state: flowToAdd.state,
+              actions: flowToAdd.treatment.instructions,
+              selectors: flowToAdd.selector.criteria
+            });
+          } else {
+            console.log("Duplicate flow detected: FlowId: " +  flowToAdd.id + " DeviceId:" + flowToAdd.deviceId)
+          }
         },this);
       },
       removeOldFlows: function(oldFlow){

@@ -66,9 +66,11 @@ Template.adminpanelUser.helpers({
       return FlowCollection.find({"selectors.ip" : this.status.lastLogin.ipAddr + "/32"},{sort: {deviceId: -1, priority: -1}});
     }
   },
-  'appIdShortened': function(){
-    var strLength = this.deviceId.length;
-    return this.deviceId.substr(strLength-4,4);
+  'deviceIdShortened': function(){
+    deviceName = Template.adminpanelUser.__helpers.get('deviceTranslator')(this.deviceId);
+    return deviceName;
+    // var strLength = this.deviceId.length;
+    // return this.deviceId.substr(strLength-4,4);
   },
   'action': function() {
     var firstActionType = this.actions[0].type;
@@ -77,7 +79,32 @@ Template.adminpanelUser.helpers({
     return firstActionType + " : " + firstActionPort;
   },
   'selector': function(){
-    return this.type + " : " + (this.ethType || this.protocol || this.mac || this.port || this.tcpPort || this.ip || this.udpPort || this.sctpPort || this.icmpCode || this.targetAddress);
+    ethType = null;
+    if(this.ethType){
+      var ethType = Template.adminpanelUser.__helpers.get('ethTypeTranslator')(this.ethType);
+    }
+    return this.type + " : " + (ethType || this.protocol || this.mac || this.port || this.tcpPort || this.ip || this.udpPort || this.sctpPort || this.icmpCode || this.targetAddress);
+  },
+  'newFlowColor': function(){
+    if(this.newFlow === true){
+      return "newFlowColor";
+    }
+  },
+  'deviceTranslator': function(deviceId){
+    console.log(deviceId);
+    switch(deviceId) {
+      case "of:0001d0bf9cd01380": return "Switch 1";
+      case "of:0001d0bf9cd5dd40": return "Switch 2";
+      case "of:0001d0bf9cd62080": return "Switch 3";
+      default: var strLength = deviceId.length;
+               return deviceId.substr(strLength-4,4);
+    }
+  },
+  'ethTypeTranslator': function(ethType){
+    switch(ethType) {
+      case "0x800": return "IP";
+      default: return ethType;
+    }
   }
 });
 

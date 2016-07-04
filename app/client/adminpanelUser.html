@@ -36,12 +36,10 @@
                     <tr>
                       <td colspan="7" class="hiddenRow">
                         <div id={{_id}} class="collapse">
-                          <table class="table table-hover table-condensed" >
+                          <table class="table table-condensed" >
                             <thead>
                               <tr>
                                 <th>Device</th>
-                                <th>Status</th>
-                                <th>TableId</th>
                                 <th>Priority</th>
                                 <th>Selectors</th>
                                 <th class="textAlignRight">Actions</th>
@@ -49,10 +47,8 @@
                             </thead>
                             <tbody>
                               {{#each userFlow}}
-                              <tr>
-                                <td title={{appId}}>...{{appIdShortened}}</td>
-                                <td>{{state}}</td>
-                                <td>{{tableId}}</td>
+                              <tr class={{newFlowColor}}>
+                                <td title={{deviceId}}>{{deviceIdShortened}}</td>
                                 <td>{{priority}}</td>
                                 <td>{{#each selectors}}
                                       <tr> {{selector}} </tr>
