@@ -63,7 +63,7 @@ Template.adminpanelUser.helpers({
   },
   'userFlow': function(){
     if(this.status){
-      return FlowCollection.find({"selectors.ip" : this.status.lastLogin.ipAddr + "/32"},{sort: {deviceId: -1, priority: -1}});
+      return FlowCollection.find({"selectors.ip" : this.status.lastLogin.ipAddr + "/32"},{sort: {newFlow: -1, deviceId: -1, priority: -1}});
     }
   },
   'deviceIdShortened': function(){
