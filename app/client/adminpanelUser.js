@@ -92,8 +92,8 @@ Template.adminpanelUser.helpers({
     console.log(deviceId);
     switch(deviceId) {
       case "of:0001d0bf9cd01380": return "Switch 1";
-      case "of:0001d0bf9cd5dd40": return "Switch 2";
-      case "of:0001d0bf9cd62080": return "Switch 3";
+      case "of:0001d0bf9cd62080": return "Switch 2";
+      case "of:0001d0bf9cd5dd40": return "Switch 3";
       default: var strLength = deviceId.length;
                return deviceId.substr(strLength-4,4);
     }

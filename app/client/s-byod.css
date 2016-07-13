@@ -21,6 +21,18 @@ UL.navbar-nav {
   background-color: white;
 }
 
+.navbar-brand{
+  font-weight: bold;
+}
+
+.userName{
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  padding: 8px 5px;
+  line-height:20px;
+}
+
 /*
  * Colors
  ****************************/

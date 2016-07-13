@@ -245,6 +245,9 @@ Template.userNavigation.events({
 Template.userNavigation.helpers({
   'isAdmin': function() {
    return Roles.userIsInRole(Meteor.userId(), 'admin');
+  },
+  'userName': function() {
+    return Meteor.user().username;
   }
 });
 

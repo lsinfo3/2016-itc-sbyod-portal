@@ -96,6 +96,7 @@
 
 <template name="userNavigation">
   {{#if currentUser}}
+      <a id="usersName" class="font-white userName">{{userName}} &nbsp;</a>
     {{#if isAdmin}}
       <a id="adminpanel" class="btn btn-default">Adminpanel &nbsp;
         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
@@ -121,7 +122,7 @@
           <div class="form-group">
             <label class="sr-only" for="exampleInputPassword3">Password</label>
             <div class="col-sm-12">
-              <input type="password" class="input-lg form-control" id="password" placeholder="Passwort">
+              <input type="password" class="input-lg form-control" id="password" placeholder="Password">
             </div>
           </div>
           <button id="loginBtn" class="btn-lg btn btn-primary">Login</button>
