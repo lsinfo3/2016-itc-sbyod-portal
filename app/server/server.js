@@ -50,7 +50,7 @@ var onosReachable = "-1";
      var password = Meteor.settings.private.admin.password;
      adminRole = "admin";
      Meteor.call("createUserAccount", admin, email, password, adminRole);
-     defaultRole = "default"
+     defaultRole = "default";
      Meteor.call("createNewRole", defaultRole);
      _.each(testusers, function(testuser){
        Meteor.call("createUserAccount", testuser.username, testuser.email, testuser.password, defaultRole);
@@ -328,6 +328,26 @@ Meteor.methods({
         });
         //update collection via service._id which is collectionSide _id
         UserServices.update(service._id, { $set: {serviceEnabled: newState}});
+      },
+      //all services of a user with IP "userIP" will be deactivated
+      deactivateAllServices: function(userIp, userId){
+        //rest call for deactivation
+        Meteor.call("deleteUserServices", userIP, function(error){
+          if(error) console.error(error.reason);
+          else {
+            //update collection
+            //deactivate "enabled"-statu of user with userId
+            var usersServices = UserServices.find({user: userId});
+            _.each(usersServices, function(service){
+              UserServices.update(service._id, { $set: {serviceEnabled: false}});
+            },this)
+          }
+        });
+      },
+      deleteUserServices: function(userIP){
+        var url = urlPrefix + urlBYOD + "/user/" + userIP;
+        this.unblock();
+        HTTP.call("DELETE", url, {auth: ONOS_credentials}).data;
       },
       checkServiceExistance: function(serviceId){
         var url = urlPrefix + urlBYOD + "/service/" + serviceId;

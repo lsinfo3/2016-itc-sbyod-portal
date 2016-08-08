@@ -15,6 +15,7 @@
                       <th>Last active services</th>
                       <th>Inactive services</th>
                       <th><span class="glyphicon glyphicon-info-sign" id="detailButton" aria-hidden="true" title="Display flows of user"></span> </th>
+                      <th><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Deactivate all services"></span> </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -32,9 +33,10 @@
                           <span class="glyphicon glyphicon-{{icon}} fontColorRed iconSize" aria-hidden="true" title={{serviceName}}></span>
                            {{/each}}</td>
                       <td><div  data-toggle="collapse" data-target=#{{_id}} aria-expanded="false" class="glyphicon glyphicon-chevron-down" aria-hidden="true" ></div> </td>
+                      <td><span id="deactivateButton" class="glyphicon glyphicon-remove iconSize" aria-hidden="true" title="Deactivate all services"></span></td>
                     </tr>
                     <tr>
-                      <td colspan="7" class="hiddenRow">
+                      <td colspan="8" class="hiddenRow">
                         <div id={{_id}} class="collapse">
                           <table class="table table-condensed" >
                             <thead>

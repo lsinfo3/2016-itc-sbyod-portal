@@ -6,10 +6,9 @@ Template.adminpanelUser.helpers({
     return Meteor.users.find({},{sort: {status : -1}});
   },
   'ipAddr': function(){
-    if(this.status){
-      var userIp = this.status.lastLogin.ipAddr
-      if(userIp){
-        return userIp;
+    if(this.status.lastLogin){
+      if(this.status.lastLogin.ipAddr){
+        return this.status.lastLogin.ipAddr;
       } else {
         return "n/a";
       }
@@ -18,7 +17,7 @@ Template.adminpanelUser.helpers({
     }
   },
   'onlineStatus': function(){
-    if(this.status){
+    if(this.status.lastLogin){
       return this.status.online ? "active" : "inactive";
     } else {
       return "inactive";
@@ -47,7 +46,7 @@ Template.adminpanelUser.helpers({
     return this.serviceEnabled ? "fontColorGreen" : "fontColorRed";
   },
   'lastActive': function(){
-    if(this.status){
+    if(this.status.lastLogin){
       var ISODate = this.status.lastLogin.date;
       if(ISODate){
         return ISODate.toUTCString().slice(0, -7);
@@ -62,7 +61,7 @@ Template.adminpanelUser.helpers({
       return this.status.lastLogin.userAgent;
   },
   'userFlow': function(){
-    if(this.status){
+    if(this.status.lastLogin){
       return FlowCollection.find({"selectors.ip" : this.status.lastLogin.ipAddr + "/32"},{sort: {newFlow: -1, deviceId: -1, priority: -1}});
     }
   },
@@ -109,5 +108,22 @@ Template.adminpanelUser.helpers({
 
 Template.adminpanelUser.events({
   'click #displayFlows': function(){
+  },
+  'click #deactivateButton': function(){
+    if(this.status.lastLogin){
+      //do not deactivate admins services
+      if(Roles.userIsInRole(this._id, 'admin')){
+        sAlert.error("This users services cannot be deactivated.")
+      }
+      //deactivate services for chosen user
+      else {
+        Meteor.call("deactivateAllServices", this.status.lastLogin.ipAddr, this._id, function(error){
+          if(error) console.log(error.reason);
+        });
+      }
+
+
+
+    }
   }
 });
