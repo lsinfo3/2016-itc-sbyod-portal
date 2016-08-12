@@ -5,10 +5,6 @@ sudo apt-get update
 sudo apt-get install -y git
 sudo apt-get install -y curl
 
-#add default route
-sudo route add default gw 172.16.37.1 eth1
-sudo route del default gw 10.0.2.2
-
 #install meteor
 curl https://install.meteor.com/ | sh
 
@@ -19,26 +15,47 @@ git clone https://github.com/lsinfo3/2016-itc-sbyod-portal.git
 chmod +x /home/vagrant/2016-itc-sbyod-portal/startup.sh
 
 #edit rc.local
-sudo sed -i "s|# By default this script does nothing.|(cd /home/vagrant/2016-itc-sbyod-portal/; sudo sh '/home/vagrant/2016-itc-sbyod-portal/startup.sh')|" /etc/rc.local
+sudo sed -i "s|# By default this script does nothing.|(cd /home/vagrant/2016-itc-sbyod-portal/; sudo sh '/home/vagrant/2016-itc-sbyod-portal/
+startup.sh')|" /etc/rc.local
 
-# echo "You will now be prompted for login credentials and the IP, ONOS is running at."
-# # user name, password, email and onosIP dialog
-# if [ -z ${INPUT_USERNAME+1} ]; then
-#   echo -n "Enter admins username: "
-#   read INPUT_USERNAME
-# fi
-# if [ -z ${INPUT_PASSWORD+1} ]; then
-#   echo -n "Enter admins password (hidden input): "
-#   read -sr INPUT_PASSWORD
-#   echo
-# fi
-# if [ -z ${INPUT_ONOS_IP+1} ]; then
-#   echo -n "Enter ONOS IP: "
-#   read INPUT_ONOS_IP
-# fi
-# echo "[OK]"
+#add default route
+sudo route add default gw 172.16.37.1 eth1
+sudo route del default gw 10.0.2.2
+echo "sudo route add default gw 172.16.37.1 eth1" >> /home/vagrant/.profile
+echo "sudo route del default gw 10.0.2.2" >> /home/vagrant/.profile
 
-#write admins credentials and ONOS IP in settings file
-# sed -i "s/: \"admin\"/: \"$INPUT_USERNAME\"/" ~/2016-itc-sbyod-portal/settings.json
-# sed -i "0,/: \"password\"/s//: \"$INPUT_PASSWORD\"/" ~/2016-itc-sbyod-portal/settings.json
-# sed -i "s|/.*:|//$INPUT_ONOS_IP:|" ~/2016-itc-sbyod-portal/settings.json
+sudo apt-get install nginx -y
+#redirect conf file needs to be placed in site-available
+echo "server {
+	listen 80 default_server;
+	return 307 https://portal.s-byod.de;
+}" > /etc/nginx/sites-available/redirect
+
+sudo ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
+
+# disable default site
+sudo rm /etc/nginx/sites-enabled/default
+
+echo "server {
+	listen 443;
+	server_name portal.s-byod.de;
+
+	ssl on;
+	ssl_certificate /etc/nginx/ssl/cert.pem;
+	ssl_certificate_key /etc/nginx/ssl/cert.key;
+
+	location / {
+		proxy_pass http://127.0.0.1:3000;
+		proxy_set_header X-Forwarded-For $remote_addr;
+	}
+}
+" > /etc/nginx/sites-available/portal
+sudo ln -s /etc/nginx/sites-available/portal /etc/nginx/sites-enabled/
+
+mkdir /etc/nginx/ssl
+
+# manually:
+# /etc/nginx/ssl/cert.pem
+# /etc/nginx/ssl/cert.key
+
+sudo service nginx restart

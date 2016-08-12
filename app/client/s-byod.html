@@ -17,7 +17,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand font-white" href="/" id="brandName">S-BYOD</a>
+       <a class="navbar-brand font-white" href="/" id="brandName">S-BYOD</a>
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -60,7 +60,8 @@
               <button type="button" class="btn btn-default {{serviceBtnStyle}} btn-lg btn-block serviceBtn">
                 <table class="serviceTable">
                   <tr>
-                    <td class="textAlignLeft"><span class="{{serviceIcon}}"></span> &nbsp; {{serviceName}}</td>
+                    <td class="textAlignLeft iconSize"><span class="{{serviceIcon}}"></span></td>
+                    <td class="textAlignLeft">&nbsp;{{serviceName}}</td>
                     <td class="textAlignRight"><span class="glyphicon glyphicon-{{serviceStateGlyph}}"></span></td>
                   </tr>
                 </table>
@@ -72,7 +73,8 @@
             <button type="button" class="btn btn-default btn-lg btn-block serviceBtn" disabled="disabled">
               <table style="width:100%">
                 <tr>
-                  <td class="textAlignLeft"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp; No services available</td>
+                  <td class="textAlignLeft iconSize"><span class="glyphicon glyphicon-ban-circle"></span></td>
+                  <td class="textAlignLeft">&nbsp; No services available</td>
                 </tr>
               </table>
             </button>
@@ -94,6 +96,12 @@
 
 <template name="userNavigation">
   {{#if currentUser}}
+      <a id="usersName" class="font-white userName">{{userName}} &nbsp;</a>
+    {{#if isAdmin}}
+      <a id="adminpanel" class="btn btn-default">Adminpanel &nbsp;
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+      </a>
+    {{/if}}
       <a id="logout" class="btn btn-default">Logout &nbsp;
         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
       </a>
@@ -114,7 +122,7 @@
           <div class="form-group">
             <label class="sr-only" for="exampleInputPassword3">Password</label>
             <div class="col-sm-12">
-              <input type="password" class="input-lg form-control" id="password" placeholder="Passwort">
+              <input type="password" class="input-lg form-control" id="password" placeholder="Password">
             </div>
           </div>
           <button id="loginBtn" class="btn-lg btn btn-primary">Login</button>
@@ -132,15 +140,15 @@
 
             <ul class="partnerList">
               <li><a href="http://bmbf.de">
-                <img class="logo" src="/logo-bmbf.svg" alt="Logo BMBF"></a></li>
+                <img class="logo" src="/logo-bmbf_2.jpg" alt="Logo BMBF"></a></li>
               <li><a href="http://genua.de">
-                <img class="logo" src="/logo-genua.jpg" alt="Logo genua"></a></li>
+                <img class="logo alignLogo" src="/logo-genua.jpg" alt="Logo genua"></a></li>
               <li><a href="http://www3.informatik.uni-wuerzburg.de">
-                <img class="logo" src="/logo-uniwue.png" alt="Logo Uni Wue"></a></li>
+                <img class="logo alignLogo" src="/logo-uniwue.png" alt="Logo Uni Wue"></a></li>
               <li><a href="http://www.lkn.ei.tum.de">
-                <img class="logo" src="/logo-tum.png" alt="Logo TUM"></a></li>
+                <img class="logo alignLogo" src="/logo-tum.png" alt="Logo TUM"></a></li>
               <li><a href="http://www.infosim.net">
-                <img class="logo logoInfosim" src="/logo-infosim.png" alt="Logo infosim"></a></li>
+                <img class="logo logoInfosim alignLogo" src="/logo-infosim.png" alt="Logo infosim"></a></li>
             </ul>
 
 
@@ -188,7 +196,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div id="loadingHider" class="hidden">
-          <h3 class="textAlignCenter"> Please wait! Services are loading. </h3>
+          <h3 class="textAlignCenter"> Please wait! </h3>
           <div class="sk-cube-grid">
             <div class="sk-cube sk-cube1"></div>
             <div class="sk-cube sk-cube2"></div>

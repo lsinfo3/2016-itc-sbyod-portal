@@ -79,8 +79,7 @@ Template.services.events({
           //set Session variable for service, holding the current state of this service
           Session.set(self._id, "inactive");
           //sAlert.success(self.serviceName + " deactivated");
-        }
-        if(self.serviceEnabled === false){
+        } else if(self.serviceEnabled === false && self.servicePending === false){
           UserServices.update(self._id, { $set: {servicePending: true}});
           if(pendingServices.includes(self.serviceId) === false){
             pendingServices.push(self.serviceId);
@@ -90,6 +89,16 @@ Template.services.events({
           console.log("Your Token: " + tmpToken);
           //set Session variable for service, holding the current state of this service
           Session.set(self._id, "pending");
+        } else {
+          //change status from pending to not pending
+          UserServices.update(self._id, { $set: {servicePending: false}});
+          //delete service from array pendingServices
+          if(pendingServices.includes(self.serviceId) === true){
+            var index = pendingServices.indexOf(self.serviceId);
+            if(index !== -1) {
+            	pendingServices.splice(index, 1);
+            }
+          }
         }
       }
     });
@@ -143,6 +152,10 @@ Template.services.events({
 
 // check Status of service to display correct button-style
 Template.services.helpers({
+  userServices: function(){
+    //this needs to be done to prevent duplicate services for admin user
+    return UserServices.find({user: Meteor.userId()})
+  },
   //change button style depending on service state (active, inactive or pending)
   serviceBtnStyle: function() {
     if(Session.get(this._id) === "active" || this.serviceEnabled === true)
@@ -205,6 +218,9 @@ Template.login.events({
             sAlert.error(error.reason);
           }
         } else {
+          Meteor.logoutOtherClients(function(error){
+            if(error) sAlert.error(error.reason);
+          });
           checkAvailable();
         }
     });
@@ -216,8 +232,25 @@ Template.userNavigation.events({
   'click #logout': function() {
     Meteor.logout();
     Router.go('/');
+  },
+  'click #adminpanel': function() {
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Router.go('/adminpanel');
+    } else {
+      Router.go('/');
+    }
   }
 });
+
+Template.userNavigation.helpers({
+  'isAdmin': function() {
+   return Roles.userIsInRole(Meteor.userId(), 'admin');
+  },
+  'userName': function() {
+    return Meteor.user().username;
+  }
+});
+
 
 Template.spinnerCube.onRendered( function(){
   //display loading spinnerCube after 100ms (prevents flashing appearance)

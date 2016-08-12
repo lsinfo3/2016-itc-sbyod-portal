@@ -1,0 +1,75 @@
+<template name="adminpanelUser">
+  <div class="container-fluid module-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        {{ #if isAdmin }}
+            <h2 class="align_top"> User </h2>
+            <form class="form-horizontal">
+                <table class="table table-striped" >
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Status</th>
+                      <th>Last IP-Address</th>
+                      <th>Last active</th>
+                      <th>Last active services</th>
+                      <th>Inactive services</th>
+                      <th><span class="glyphicon glyphicon-info-sign" id="detailButton" aria-hidden="true" title="Display flows of user"></span> </th>
+                      <th><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Deactivate all services"></span> </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each allUser}}
+                    <tr>
+                      <td>{{username}}</td>
+                      <td class={{fontColor}}>{{onlineStatus}}</td>
+                      <td>{{ipAddr}}</td>
+                      <td>{{lastActive}}</td>
+                      <td> {{#each activeUserService}}
+                          <span class="glyphicon glyphicon-{{icon}} fontColorGreen iconSize" aria-hidden="true" title={{serviceName}}></span>
+                           {{/each}}
+                      </td>
+                      <td> {{#each inactiveUserService}}
+                          <span class="glyphicon glyphicon-{{icon}} fontColorRed iconSize" aria-hidden="true" title={{serviceName}}></span>
+                           {{/each}}</td>
+                      <td><div  data-toggle="collapse" data-target=#{{_id}} aria-expanded="false" class="glyphicon glyphicon-chevron-down" aria-hidden="true" ></div> </td>
+                      <td><span id="deactivateButton" class="glyphicon glyphicon-remove iconSize" aria-hidden="true" title="Deactivate all services"></span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="8" class="hiddenRow">
+                        <div id={{_id}} class="collapse">
+                          <table class="table table-condensed" >
+                            <thead>
+                              <tr>
+                                <th>Device</th>
+                                <th>Priority</th>
+                                <th>Selectors</th>
+                                <th class="textAlignRight">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {{#each userFlow}}
+                              <tr class={{newFlowColor}}>
+                                <td title={{deviceId}}>{{deviceIdShortened}}</td>
+                                <td>{{priority}}</td>
+                                <td>{{#each selectors}}
+                                      <tr> {{selector}} </tr>
+                                    {{/each}}
+                                </td>
+                                <td class="textAlignRight">{{action}}</td>
+                              </tr>
+                              {{/each}}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+          </form>
+        {{ /if }}
+      </div>
+    </div>
+  </div>
+</template>

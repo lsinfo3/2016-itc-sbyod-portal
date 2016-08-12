@@ -21,6 +21,18 @@ UL.navbar-nav {
   background-color: white;
 }
 
+.navbar-brand{
+  font-weight: bold;
+}
+
+.userName{
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  padding: 8px 5px;
+  line-height:20px;
+}
+
 /*
  * Colors
  ****************************/
@@ -34,8 +46,8 @@ UL.navbar-nav {
    color: white;
  }
  a .font-white, a:hover{
-   color: black;
-   text-decoration:none;
+   color: white;
+   text-decoration: none;
  }
  .btn-active{
    /* #73e600*/
@@ -75,6 +87,16 @@ UL.navbar-nav {
   background: white;
   border-radius: 15px;
 }
+.fontColorGreen{
+  color: green;
+}
+.fontColorRed{
+  color: red;
+}
+.newFlowColor{
+  background-color: #A5C0F5;
+}
+
 
 
 /*
@@ -143,6 +165,9 @@ ul.partnerList img {
 .bmbfLogo {
   max-width: 150px;
 }
+.alignLogo{
+  margin-top: 10px;
+}
 
 
 
@@ -183,10 +208,21 @@ footer .footer-txt {
   text-align: right;
 }
 
+.serviceBtn{
+  white-space: normal;
+}
+
 .serviceTable{
   width: 100%;
 }
 
+.iconSize{
+  /*font-size: 18px;*/
+  width: 18px;
+}
+.hiddenRow {
+    padding: 0 !important;
+}
 /*
  * Spinner
  *************************************/

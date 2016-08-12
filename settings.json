@@ -17,12 +17,22 @@
           "email" : "Email2"
         },
         "testuser3" : {
-          "username" : "testuser3",
+          "username" : "tablet1",
           "password" : "password",
           "email" : "Email3"
+        },
+        "testuser4" : {
+          "username" : "tablet2",
+          "password" : "password",
+          "email" : "Email4"
+        },
+        "testuser5" : {
+          "username" : "testuser3",
+          "password" : "password",
+          "email" : "Email5"
         }
     },
-   	"ONOSRestEndpoint" : "http://127.0.0.1:8181/onos",
+   	"ONOSRestEndpoint" : "http://172.16.37.11:8181/onos",
   	"ONOSByodEndpoint" : "/sbyod",
   	"onosCredentials" : {
          "username" : "karaf",
