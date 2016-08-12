@@ -88,7 +88,6 @@ Template.adminpanelUser.helpers({
     }
   },
   'deviceTranslator': function(deviceId){
-    console.log(deviceId);
     switch(deviceId) {
       case "of:0001d0bf9cd01380": return "Switch 1";
       case "of:0001d0bf9cd62080": return "Switch 2";

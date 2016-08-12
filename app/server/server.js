@@ -332,12 +332,12 @@ Meteor.methods({
       //all services of a user with IP "userIP" will be deactivated
       deactivateAllServices: function(userIp, userId){
         //rest call for deactivation
-        Meteor.call("deleteUserServices", userIP, function(error){
+        Meteor.call("deleteUserServices", userIp, function(error){
           if(error) console.error(error.reason);
           else {
             //update collection
             //deactivate "enabled"-statu of user with userId
-            var usersServices = UserServices.find({user: userId});
+            var usersServices = UserServices.find({user: userId}).fetch();
             _.each(usersServices, function(service){
               UserServices.update(service._id, { $set: {serviceEnabled: false}});
             },this)
